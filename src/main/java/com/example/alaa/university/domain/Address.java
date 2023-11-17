@@ -10,7 +10,8 @@ public class Address {
         this.streetName = streetName;
         this.streetNumber = streetNumber;
     }
-    public Address(){
+
+    public Address() {
 
     }
 

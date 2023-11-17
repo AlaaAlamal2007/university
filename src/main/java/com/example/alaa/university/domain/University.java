@@ -8,9 +8,9 @@ public class University {
     private String name;
     private Address address;
     private UniversityType universityType;
-    private  String email;
-    private  Double studyCost;
-    private Instant startStudyDay;
+    private String email;
+    private Double studyCost;
+    private Instant startOperatingDate;
     private List<Student> students;
 
     public University(Integer id, String name, Address address, UniversityType universityType,
@@ -21,10 +21,11 @@ public class University {
         this.universityType = universityType;
         this.email = email;
         this.studyCost = studyCost;
-        this.startStudyDay = startStudyDay;
+        this.startOperatingDate = startStudyDay;
         this.students = students;
     }
-    public University(){
+
+    public University() {
 
     }
 
@@ -77,11 +78,11 @@ public class University {
     }
 
     public Instant getStartStudyDay() {
-        return startStudyDay;
+        return startOperatingDate;
     }
 
     public void setStartStudyDay(Instant startStudyDay) {
-        this.startStudyDay = startStudyDay;
+        this.startOperatingDate = startStudyDay;
     }
 
     public List<Student> getStudents() {

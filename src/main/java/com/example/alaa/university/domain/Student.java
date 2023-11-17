@@ -12,7 +12,7 @@ public class Student {
     private Instant registrationDate;
     private Instant graduatedDate;
     private Double paymentFee;
-    private  String email;
+    private String email;
 
     public Student(Integer id, String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
                    Instant registrationDate, Instant graduatedDate, Double paymentFee, String email) {
@@ -27,7 +27,8 @@ public class Student {
         this.paymentFee = paymentFee;
         this.email = email;
     }
-    public Student(){
+
+    public Student() {
 
     }
 
