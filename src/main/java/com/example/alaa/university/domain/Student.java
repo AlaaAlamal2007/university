@@ -3,7 +3,7 @@ package com.example.alaa.university.domain;
 import java.time.Instant;
 
 public class Student {
-    private Integer id;
+    private Long id;
     private String name;
     private Address address;
     private Gender gender;
@@ -14,7 +14,7 @@ public class Student {
     private Double paymentFee;
     private String email;
 
-    public Student(Integer id, String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
+    public Student(Long id, String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
                    Instant registrationDate, Instant graduatedDate, Double paymentFee, String email) {
         this.id = id;
         this.name = name;
@@ -32,11 +32,11 @@ public class Student {
 
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
