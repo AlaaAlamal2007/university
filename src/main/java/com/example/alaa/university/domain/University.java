@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class University {
-    private Integer id;
+    private Long id;
     private String name;
     private Address address;
     private UniversityType universityType;
@@ -13,7 +13,7 @@ public class University {
     private Instant startOperatingDate;
     private List<Student> students;
 
-    public University(Integer id, String name, Address address, UniversityType universityType,
+    public University(Long id, String name, Address address, UniversityType universityType,
                       String email, Double studyCost, Instant startStudyDay, List<Student> students) {
         this.id = id;
         this.name = name;
@@ -29,11 +29,11 @@ public class University {
 
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

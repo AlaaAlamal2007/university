@@ -1,14 +1,21 @@
 package com.example.alaa.university.domain;
 
 public class Address {
+    private Long id;
     private String cityName;
     private String streetName;
     private Integer streetNumber;
 
-    public Address(String cityName, String streetName, Integer streetNumber) {
+
+    public Address(Long id, String cityName, String streetName, Integer streetNumber) {
+        this.id = id;
         this.cityName = cityName;
         this.streetName = streetName;
         this.streetNumber = streetNumber;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Address() {
