@@ -7,15 +7,29 @@ public class Address {
     private Integer streetNumber;
 
 
-    public Address(Long id, String cityName, String streetName, Integer streetNumber) {
-        this.id = id;
+    public Address( String cityName, String streetName, Integer streetNumber) {
+
         this.cityName = cityName;
         this.streetName = streetName;
         this.streetNumber = streetNumber;
     }
 
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", streetName='" + streetName + '\'' +
+                ", streetNumber=" + streetNumber +
+                '}';
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Address() {
@@ -41,6 +55,7 @@ public class Address {
     public Integer getStreetNumber() {
         return streetNumber;
     }
+
 
     public void setStreetNumber(Integer streetNumber) {
         this.streetNumber = streetNumber;
