@@ -14,7 +14,7 @@ public class Student {
     private Double paymentFee;
     private String email;
 
-    public Student( String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
+    public Student(String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
                    Instant registrationDate, Instant graduatedDate, Double paymentFee, String email) {
 
         this.name = name;
@@ -117,7 +117,7 @@ public class Student {
         return "Student{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", address=" + address.getCityName() + " " + address.getStreetName() + " " + address.getStreetNumber() +
+                ", address=" + address +
                 ", gender=" + gender +
                 ", graduated=" + graduated +
                 ", birthDate=" + birthDate +

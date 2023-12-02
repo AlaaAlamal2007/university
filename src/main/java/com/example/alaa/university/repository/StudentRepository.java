@@ -1,7 +1,7 @@
 package com.example.alaa.university.repository;
 
-import com.example.alaa.university.domain.Address;
 import com.example.alaa.university.domain.Student;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,61 +10,66 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class StudentRepository implements IStudentRepository {
     private final JdbcTemplate template;
     private final RowMapper<Student> rowMapper;
-    private final IAddressRepository iAddressRepository;
 
     public StudentRepository(JdbcTemplate template, RowMapper<Student> studentRowMapper
-            , IAddressRepository iAddressRepository) {
+    ) {
         System.out.println(template.toString());
         this.template = template;
         this.rowMapper = studentRowMapper;
-        this.iAddressRepository = iAddressRepository;
-
     }
 
     @Override
     public Student get(Long id) {
-        Student student = template.queryForObject("SELECT id, name, gender, graduated, payment_fee, email, university_id, address_id, birth_date, graduated_date, registration_date\n" +
-                "\tFROM public.students where id=?", rowMapper, id);
+        Student student = null;
+        try {
+            student = template.queryForObject("SELECT id, name, gender, graduated, payment_fee, email, address_id, birth_date, graduated_date, registration_date\n" +
+                    "\tFROM public.students where id=?", rowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
         return student;
     }
 
     @Override
-    public Student add(Student studentToBeAddedToDataBase, long University_id) {
-
+    public Student add(Student studentToAdd, long University_id) {
         PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
-
             PreparedStatement preparedStatement =
                     connection.prepareStatement("INSERT INTO public.students(\n" +
                             "\t name, gender, graduated, payment_fee, email, university_id," +
                             " address_id, birth_date, graduated_date, registration_date)\n" +
                             "\tVALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", new String[]{"id"});
-            preparedStatement.setString(1, studentToBeAddedToDataBase.getName());
-            preparedStatement.setString(2, studentToBeAddedToDataBase.getGender().toString());
-            preparedStatement.setBoolean(3, studentToBeAddedToDataBase.getGraduated());
-            preparedStatement.setDouble(4, studentToBeAddedToDataBase.getPaymentFee());
-            preparedStatement.setString(5, studentToBeAddedToDataBase.getEmail());
+            preparedStatement.setString(1, studentToAdd.getName());
+            preparedStatement.setString(2, studentToAdd.getGender().toString());
+            preparedStatement.setBoolean(3, studentToAdd.getGraduated());
+            preparedStatement.setDouble(4, studentToAdd.getPaymentFee());
+            preparedStatement.setString(5, studentToAdd.getEmail());
             preparedStatement.setLong(6, University_id);
-            preparedStatement.setLong(7, studentToBeAddedToDataBase.getAddress().getId());
-
+            preparedStatement.setLong(7, studentToAdd.getAddress().getId());
             preparedStatement.setTimestamp(8,
-                    new java.sql.Timestamp(studentToBeAddedToDataBase.getBirthDate().toEpochMilli()));
-
+                    Optional.ofNullable(studentToAdd.getBirthDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
             preparedStatement.setTimestamp(9,
-                    new java.sql.Timestamp(studentToBeAddedToDataBase.getGraduatedDate().toEpochMilli()));
-
+                    Optional.ofNullable(studentToAdd.getGraduatedDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
             preparedStatement.setTimestamp(10,
-                    new java.sql.Timestamp(studentToBeAddedToDataBase.getRegistrationDate().toEpochMilli()));
-
-
+                    Optional.ofNullable(studentToAdd.getRegistrationDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
             return preparedStatement;
         };
-
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         template.update(preparedStatementCreator, generatedKeyHolder);
         Number keyGenerated = generatedKeyHolder.getKey();
@@ -72,37 +77,35 @@ public class StudentRepository implements IStudentRepository {
         return get(key);
     }
 
-
     @Override
     public Student update(Long id, Student updatedStudent) {
-        Student studentBeforeUpdated = this.get(id);
-        updatedStudent.getAddress().setId(studentBeforeUpdated.getAddress().getId());
-        Address newAddress = iAddressRepository.update(studentBeforeUpdated.getAddress().getId(),
-                updatedStudent.getAddress());
-
-
         PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("UPDATE public.students\n" +
-                            "\tSET  name=?, gender=?, graduated=?, payment_fee=?, email=?, birth_date=?, graduated_date=?, registration_date=?\n" +
+                            "\tSET  name=?, gender=?, graduated=?, payment_fee=?, email=?, address_id=?, birth_date=?, graduated_date=?, registration_date=?\n" +
                             "\tWHERE id=?");
             preparedStatement.setString(1, updatedStudent.getName());
             preparedStatement.setString(2, updatedStudent.getGender().toString());
             preparedStatement.setBoolean(3, updatedStudent.getGraduated());
             preparedStatement.setDouble(4, updatedStudent.getPaymentFee());
             preparedStatement.setString(5, updatedStudent.getEmail());
-
-            preparedStatement.setTimestamp(6,
-                    new java.sql.Timestamp(updatedStudent.getBirthDate().toEpochMilli()));
-
+            preparedStatement.setLong(6, Optional.ofNullable(updatedStudent.getAddress().getId()).orElse(null));
             preparedStatement.setTimestamp(7,
-                    new java.sql.Timestamp(updatedStudent.getGraduatedDate().toEpochMilli()));
-
+                    Optional.ofNullable(updatedStudent.getBirthDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
             preparedStatement.setTimestamp(8,
-                    new java.sql.Timestamp(updatedStudent.getRegistrationDate().toEpochMilli()));
-            preparedStatement.setLong(9, id);
-
-
+                    Optional.ofNullable(updatedStudent.getGraduatedDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
+            preparedStatement.setTimestamp(9,
+                    Optional.ofNullable(updatedStudent.getRegistrationDate())
+                            .map(instant -> Timestamp.from(instant))
+                            .orElse(null)
+            );
+            preparedStatement.setLong(10, id);
             return preparedStatement;
         };
         template.update(preparedStatementCreator);
@@ -111,45 +114,26 @@ public class StudentRepository implements IStudentRepository {
 
     @Override
     public void delete(Long id) {
-        Long add=get(id).getAddress().getId();
-        PreparedStatementCreator preparedStatementCreator1=(Connection connection1)->{
-           PreparedStatement preparedStatement1=connection1.prepareStatement("UPDATE public.students\n" +
-                   "\tSET address_id=null, university_id=null\n" +
-                   "\tWHERE id=?" );
-
-           preparedStatement1.setLong(1,id);
-
-           return preparedStatement1;
-        };
-            template.update(preparedStatementCreator1);
-
-
         PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
-
             PreparedStatement preparedStatement = connection.prepareStatement("delete from students where id =?");
             preparedStatement.setLong(1, id);
-
-
             return preparedStatement;
-
         };
         template.update(preparedStatementCreator);
-        iAddressRepository.delete(add);
-
-
-
     }
 
     @Override
     public List<Student> getAll() {
-        return template.query("SELECT id, name, gender, graduated, payment_fee, email, university_id, address_id, birth_date, graduated_date, registration_date\n" +
+        return template.query("SELECT id, name, gender, graduated, payment_fee, email, university_id," +
+                "  birth_date, graduated_date, registration_date\n" +
                 "\tFROM public.students;", rowMapper);
 
     }
+
     @Override
-public List<Student> getStudentsinUni(Long university_id){
-
-        return template.query("select * from students where university_id=?",rowMapper,university_id);
-}
-
+    public List<Student> getAllStudentByUniversityId(Long universityId) {
+        List<Student> students = template.query("select * from students where university_id=?",
+                rowMapper, universityId);
+        return students;
+    }
 }

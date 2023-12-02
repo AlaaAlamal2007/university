@@ -13,16 +13,14 @@ public class University {
     private Instant startOperatingDate;
     private List<Student> students;
 
-    public University( String name, Address address, UniversityType universityType,
+    public University(String name, Address address, UniversityType universityType,
                       String email, Double studyCost, Instant startOperatingDateDay) {
-
         this.name = name;
         this.address = address;
         this.universityType = universityType;
         this.email = email;
         this.studyCost = studyCost;
         this.startOperatingDate = startOperatingDateDay;
-
     }
 
     public Instant getStartOperatingDate() {
@@ -34,7 +32,6 @@ public class University {
     }
 
     public University() {
-
     }
 
     public Long getId() {
@@ -85,7 +82,6 @@ public class University {
         this.studyCost = studyCost;
     }
 
-
     public List<Student> getStudents() {
         return students;
     }
@@ -98,12 +94,13 @@ public class University {
     public String toString() {
         return "University{" +
                 "id=" + id +
-                ", name='" + name.strip() + '\'' +
+                ", name='" + name + '\'' +
                 ", address=" + address +
                 ", universityType=" + universityType +
                 ", email='" + email + '\'' +
                 ", studyCost=" + studyCost +
                 ", startOperatingDate=" + startOperatingDate +
+                ", students=" + students +
                 '}';
     }
 }

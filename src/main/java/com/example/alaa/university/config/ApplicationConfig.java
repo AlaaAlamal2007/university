@@ -5,32 +5,22 @@ import com.example.alaa.university.domain.Student;
 import com.example.alaa.university.domain.University;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-
 @Configuration
 public class ApplicationConfig {
-    @Bean("defaultRowMapper")
 
-    public RowMapper<Student> studentRowMapper(){
-
-        return new BeanPropertyRowMapper<>();
+    @Bean
+    public RowMapper<Address> addressRowMapper(){
+        return new BeanPropertyRowMapper<>(Address.class);
     }
-////@Bean("universityRowMapper")
-////    public RowMapper<University> universityRowMapper(){
-////        RowMapper<University> rowMapperUni=(ResultSet rs,int RowNum)->{
-////            University university=new University();
-////            university.setId(rs.getLong("id"));
-////
-////            return  university;
-////
-////    };
-//
-//       return rowMapperUni;
-//}
-
-
+    @Bean
+    public RowMapper<Student> studentRowMapper(){
+        return new BeanPropertyRowMapper<>(Student.class);
+    }
+    @Bean
+    public RowMapper<University> universityRowMapper(){
+        return new BeanPropertyRowMapper<>(University.class);
+    }
 }
