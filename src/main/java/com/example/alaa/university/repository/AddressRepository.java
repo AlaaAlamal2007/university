@@ -14,11 +14,11 @@ import java.util.List;
 
 @Component
 public class AddressRepository implements IAddressRepository {
-    private JdbcTemplate jdbcTemplateAdd;
+    private JdbcTemplate jdbcTemplate;
     private RowMapper<Address> rowMapper;
 
-    public AddressRepository(JdbcTemplate jdbcTemplateAdd, RowMapper<Address> addressRowMapper) {
-        this.jdbcTemplateAdd = jdbcTemplateAdd;
+    public AddressRepository(JdbcTemplate jdbcTemplate, RowMapper<Address> addressRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = addressRowMapper;
     }
 
@@ -47,7 +47,7 @@ public class AddressRepository implements IAddressRepository {
             return preparedStatement;
         };
         GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-        jdbcTemplateAdd.update(preparedStatementCreator, generatedKeyHolder);
+        jdbcTemplate.update(preparedStatementCreator, generatedKeyHolder);
         Number keyGenerated = generatedKeyHolder.getKey();
         Long key = keyGenerated.longValue();
         return get(key);
@@ -61,12 +61,12 @@ public class AddressRepository implements IAddressRepository {
             preparedStatement.setLong(1, id);
             return preparedStatement;
         };
-        jdbcTemplateAdd.update(preparedStatementCreator);
+        jdbcTemplate.update(preparedStatementCreator);
     }
 
     @Override
     public List<Address> getAll() {
-        return jdbcTemplateAdd.query("SELECT id, city_name, street_name, street_number\n" +
+        return jdbcTemplate.query("SELECT id, city_name, street_name, street_number\n" +
                 "\tFROM public.addresses", rowMapper);
     }
 
@@ -82,13 +82,13 @@ public class AddressRepository implements IAddressRepository {
             preparedStatement.setLong(4, id);
             return preparedStatement;
         };
-        jdbcTemplateAdd.update(preparedStatementCreator);
+        jdbcTemplate.update(preparedStatementCreator);
         return get(id);
     }
 
     @Override
     public Address getStudentAddressId(Long studentId) {
-        return jdbcTemplateAdd.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
+        return jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
                         "left join students as s on  ad.id=s.address_id\n" +
                         "where s.id=?",
 
@@ -97,7 +97,7 @@ public class AddressRepository implements IAddressRepository {
 
     @Override
     public Address getUniversityAddressId(Long universityId) {
-        return jdbcTemplateAdd.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
+        return jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
                 "left join universities as u on  ad.id=u.address_id\n" +
                 "where u.id=?", rowMapper, universityId);
     }
