@@ -14,9 +14,9 @@ public class Student {
     private Double paymentFee;
     private String email;
 
-    public Student(Long id, String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
+    public Student(String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
                    Instant registrationDate, Instant graduatedDate, Double paymentFee, String email) {
-        this.id = id;
+
         this.name = name;
         this.address = address;
         this.gender = gender;
@@ -110,5 +110,21 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address=" + address +
+                ", gender=" + gender +
+                ", graduated=" + graduated +
+                ", birthDate=" + birthDate +
+                ", registrationDate=" + registrationDate +
+                ", graduatedDate=" + graduatedDate +
+                ", paymentFee=" + paymentFee +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
