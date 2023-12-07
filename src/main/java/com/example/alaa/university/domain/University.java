@@ -14,13 +14,15 @@ public class University {
     private List<Student> students;
 
     public University(String name, Address address, UniversityType universityType,
-                      String email, Double studyCost, Instant startOperatingDateDay) {
+                      String email, Double studyCost, Instant startOperatingDateDay,
+                      List<Student> students) {
         this.name = name;
         this.address = address;
         this.universityType = universityType;
         this.email = email;
         this.studyCost = studyCost;
         this.startOperatingDate = startOperatingDateDay;
+        this.students = students;
     }
 
     public Instant getStartOperatingDate() {

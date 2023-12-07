@@ -26,7 +26,7 @@ public class AddressRepository implements IAddressRepository {
     public Address get(Long id) {
         Address address = null;
         try {
-            address = jdbcTemplateAdd.queryForObject("SELECT id, city_name, street_name, street_number\n" +
+            address = jdbcTemplate.queryForObject("SELECT id, city_name, street_name, street_number\n" +
                     "\tFROM public.addresses where id=?", rowMapper, id);
         } catch (EmptyResultDataAccessException e) {
             return null;

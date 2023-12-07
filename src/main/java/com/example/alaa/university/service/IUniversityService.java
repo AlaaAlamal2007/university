@@ -1,10 +1,10 @@
-package com.example.alaa.university.repository;
+package com.example.alaa.university.service;
 
 import com.example.alaa.university.domain.University;
 
 import java.util.List;
 
-public interface IUniversityRepository {
+public interface IUniversityService {
     University get(Long id);
 
     University add(University university);
@@ -13,11 +13,9 @@ public interface IUniversityRepository {
 
     void delete(Long id);
 
-    List<University> getAll();
-
     University setUniversityAddressIdNull(Long universityId);
 
     University getStudentUniversityId(Long studentId);
 
-    University setUniversityAddressId(Long universityId, Long addressId);
+    List<University> getAll();
 }

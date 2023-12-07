@@ -1,13 +1,13 @@
-package com.example.alaa.university.repository;
+package com.example.alaa.university.service;
 
 import com.example.alaa.university.domain.Student;
 
 import java.util.List;
 
-public interface IStudentRepository {
+public interface IStudentService {
     Student get(Long id);
 
-    Student add(Student student, long University_id);
+    Student add(Student student, long universityId);
 
     Student update(Long id, Student updatedStudent);
 

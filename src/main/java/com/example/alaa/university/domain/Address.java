@@ -12,16 +12,6 @@ public class Address {
         this.streetNumber = streetNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", cityName='" + cityName + '\'' +
-                ", streetName='" + streetName + '\'' +
-                ", streetNumber=" + streetNumber +
-                '}';
-    }
-
     public Long getId() {
         return id;
     }
@@ -55,5 +45,15 @@ public class Address {
 
     public void setStreetNumber(Integer streetNumber) {
         this.streetNumber = streetNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", streetName='" + streetName + '\'' +
+                ", streetNumber=" + streetNumber +
+                '}';
     }
 }
