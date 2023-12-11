@@ -5,3 +5,4 @@ public class ResourceUniversityIsNotFoundException extends UniversityException {
         super(message);
     }
 }
+

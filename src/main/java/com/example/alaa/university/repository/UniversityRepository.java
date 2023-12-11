@@ -49,7 +49,6 @@ public class UniversityRepository implements IUniversityRepository {
             preparedStatement.setString(2, university.getUniversityType().toString());
             preparedStatement.setString(3, university.getEmail());
             preparedStatement.setDouble(4, university.getStudyCost());
-            //preparedStatement.setLong(5, university.getAddress().getId());
             preparedStatement.setTimestamp(5,
                     Optional.ofNullable(university.getStartOperatingDate())
                             .map(instant -> Timestamp.from(university.getStartOperatingDate()))
@@ -99,7 +98,6 @@ public class UniversityRepository implements IUniversityRepository {
 
     @Override
     public List<University> getAll() {
-
         return jdbcTemplateU.query("select * from universities", rowMapperU);
     }
 

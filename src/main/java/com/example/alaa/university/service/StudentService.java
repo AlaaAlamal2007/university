@@ -22,9 +22,7 @@ public class StudentService implements IStudentService {
                           IAddressRepository iAddRepository,
                           IUniversityRepository iUniRepository) {
         this.iStuRepository = iStuRepository;
-
         this.iAddRepository = iAddRepository;
-
         this.iUniRepository = iUniRepository;
     }
 
@@ -42,6 +40,16 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student add(Student student, long universityId) {
+        validateStudent(student);
+        Address address = student.getAddress();
+        Address newAddress = iAddRepository.add(address);
+        Student stTobeAdded = iStuRepository.add(student, universityId);
+        Long stTobeAddedId = stTobeAdded.getId();
+        iStuRepository.setStudentAddressId(stTobeAddedId, newAddress.getId());
+        return get(stTobeAddedId);
+    }
+
+    private static void validateStudent(Student student) {
         if (student.getAddress() == null) {
             throw new ArgumentStudentException("Student must have address ");
         }
@@ -52,14 +60,8 @@ public class StudentService implements IStudentService {
             throw new ArgumentStudentException("Student fee must be between (2000,10000) ");
         }
         if (student.getRegistrationDate().isAfter(student.getGraduatedDate())) {
-            throw new ArgumentStudentException("Student rgistration Date is before graduated date ");
+            throw new ArgumentStudentException("Student registration Date is before graduated date ");
         }
-        Address address = student.getAddress();
-        Address newAddress = iAddRepository.add(address);
-        Student stTobeAdded = iStuRepository.add(student, universityId);
-        Long stTobeAddedId = stTobeAdded.getId();
-        iStuRepository.setStudentAddressId(stTobeAddedId, newAddress.getId());
-        return get(stTobeAddedId);
     }
 
     @Override

@@ -5,3 +5,4 @@ public class AddressException extends RuntimeException {
         super(message);
     }
 }
+
