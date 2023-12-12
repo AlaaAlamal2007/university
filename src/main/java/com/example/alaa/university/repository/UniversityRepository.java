@@ -43,14 +43,13 @@ public class UniversityRepository implements IUniversityRepository {
         PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("INSERT INTO public.universities(\n" +
-                            "\t name, university_type, email, study_cost, address_id, start_operating_date)\n" +
-                            "\tVALUES ( ?, ?, ?, ?, ?, ?)", new String[]{"id"});
+                            "\t name, university_type, email, study_cost,  start_operating_date)\n" +
+                            "\tVALUES (  ?, ?, ?, ?, ?)", new String[]{"id"});
             preparedStatement.setString(1, university.getName());
             preparedStatement.setString(2, university.getUniversityType().toString());
             preparedStatement.setString(3, university.getEmail());
             preparedStatement.setDouble(4, university.getStudyCost());
-            preparedStatement.setLong(5, university.getAddress().getId());
-            preparedStatement.setTimestamp(6,
+            preparedStatement.setTimestamp(5,
                     Optional.ofNullable(university.getStartOperatingDate())
                             .map(instant -> Timestamp.from(university.getStartOperatingDate()))
                             .orElse(null));
@@ -99,7 +98,48 @@ public class UniversityRepository implements IUniversityRepository {
 
     @Override
     public List<University> getAll() {
-
         return jdbcTemplateU.query("select * from universities", rowMapperU);
+    }
+
+    @Override
+    public University setUniversityAddressIdNull(Long universityId) {
+        PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE public.universities\n" +
+                    "\tSET  address_id=null\n" +
+                    "\tWHERE id=?;");
+            preparedStatement.setLong(1, universityId);
+            return preparedStatement;
+        };
+        jdbcTemplateU.update(preparedStatementCreator);
+        return get(universityId);
+    }
+
+    @Override
+    public University getStudentUniversityId(Long studentId) {
+        University university = null;
+        try {
+            university = jdbcTemplateU.queryForObject("select u.id,u.name,u.university_type,u.email,u.study_cost,u.start_operating_date\n" +
+                    "from universities as u \n" +
+                    "left join students as s on s.university_id=u.id\n" +
+                    "where s.id=?", rowMapperU, studentId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return university;
+    }
+
+    @Override
+    public University setUniversityAddressId(Long universityId, Long addressId) {
+        PreparedStatementCreator preparedStatementCreator = (Connection connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE public.universities\n" +
+                    "\tSET  address_id=?\n" +
+                    "\tWHERE id=?"
+            );
+            preparedStatement.setLong(1, addressId);
+            preparedStatement.setLong(2, universityId);
+            return preparedStatement;
+        };
+        jdbcTemplateU.update(preparedStatementCreator);
+        return get(universityId);
     }
 }
