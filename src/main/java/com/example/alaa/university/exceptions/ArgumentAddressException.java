@@ -4,4 +4,5 @@ public class ArgumentAddressException extends AddressException {
     public ArgumentAddressException(String message) {
         super(message);
     }
+
 }

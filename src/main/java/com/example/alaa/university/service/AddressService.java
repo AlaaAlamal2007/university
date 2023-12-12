@@ -32,6 +32,9 @@ public class AddressService implements IAddressService {
                 address.getStreetNumber() == null) {
             throw new ArgumentAddressException("every field of address must not be null");
         }
+        if (address.getStreetNumber() < 0) {
+            throw new ArgumentAddressException("street number must no be negative");
+        }
         Address addressToAdded = iAddRepository.add(address);
         Long addressToAddId = addressToAdded.getId();
         return get(addressToAddId);
@@ -39,13 +42,13 @@ public class AddressService implements IAddressService {
 
     @Override
     public void delete(Long id) {
+        get(id);
         iAddRepository.get(id);
         iAddRepository.delete(id);
     }
 
     @Override
     public List<Address> getAll() {
-
         return iAddRepository.getAll();
     }
 
@@ -64,7 +67,6 @@ public class AddressService implements IAddressService {
             throw new ResourceAddressIsNotFoundException("student with id="
                     + studentId + " does not have address");
         }
-
         return address;
     }
 
@@ -75,7 +77,6 @@ public class AddressService implements IAddressService {
             throw new ResourceAddressIsNotFoundException("University with id="
                     + " does not have address");
         }
-
         return address;
     }
 }

@@ -6,15 +6,10 @@ import com.example.alaa.university.service.IStudentService;
 import com.example.alaa.university.service.IUniversityService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-@Component
+//@Component
 public class ServiceExample {
     private IUniversityService iUniServiceEx;
     private IAddressService iAddServiceEx;
@@ -52,7 +47,7 @@ public class ServiceExample {
                 Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
                 "MTasneem@gmail.com");
         Address address2 = new Address("Alwad7209", "AmericanSt60", 60);
-        Student st2 = new Student("Muna", null,
+        Student st2 = new Student("Tarteel", address2,
                 Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
                 Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
                 "MTasneem@gmail.com");
@@ -61,8 +56,7 @@ public class ServiceExample {
                 UniversityType.GOVERMENTAL, "Alqahera@gmail.com", 7000d,
                 Instant.now(), Arrays.asList(st1, st2));
         //iUniServiceEx.add(uni);
-        //iUniServiceEx.getStudentUniversityId(37L);
-        //istServiceEx.add(st2,3L);
+        iUniServiceEx.getStudentUniversityId(37L);
         //************************************************
         // iUniServiceEx.delete(62L);
         // iUniServiceEx.update(31L,uni);

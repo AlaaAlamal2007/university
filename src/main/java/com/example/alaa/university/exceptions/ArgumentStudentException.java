@@ -4,4 +4,5 @@ public class ArgumentStudentException extends StudentException {
     public ArgumentStudentException(String message) {
         super(message);
     }
+
 }
