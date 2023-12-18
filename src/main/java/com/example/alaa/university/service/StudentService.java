@@ -22,7 +22,9 @@ public class StudentService implements IStudentService {
                           IAddressRepository iAddRepository,
                           IUniversityRepository iUniRepository) {
         this.iStuRepository = iStuRepository;
+
         this.iAddRepository = iAddRepository;
+
         this.iUniRepository = iUniRepository;
     }
 
@@ -59,8 +61,10 @@ public class StudentService implements IStudentService {
         if (student.getPaymentFee() <= 1000d && student.getPaymentFee() >= 2000d) {
             throw new ArgumentStudentException("Student fee must be between (2000,10000) ");
         }
-        if (student.getRegistrationDate().isAfter(student.getGraduatedDate())) {
-            throw new ArgumentStudentException("Student registration Date is before graduated date ");
+        if (student.getGraduatedDate() != null) {
+            if (student.getRegistrationDate().isAfter(student.getGraduatedDate())) {
+                throw new ArgumentStudentException("Student registration Date is before graduated date ");
+            }
         }
     }
 

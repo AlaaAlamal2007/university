@@ -46,7 +46,7 @@ public class UniversityService implements IUniversityService {
             throw new ArgumentUniversityException("university must have an address");
         }
         if (university.getStudyCost() < 2000d) {
-            throw new ArgumentUniversityException("university cost must be" +
+            throw new ArgumentUniversityException("university cost must be " +
                     "greater than 2000");
         }
         Address address = university.getAddress();
