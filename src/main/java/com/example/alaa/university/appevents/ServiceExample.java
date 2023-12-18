@@ -6,10 +6,12 @@ import com.example.alaa.university.service.IStudentService;
 import com.example.alaa.university.service.IUniversityService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Arrays;
-//@Component
+
+@Component
 public class ServiceExample {
     private IUniversityService iUniServiceEx;
     private IAddressService iAddServiceEx;
@@ -56,7 +58,10 @@ public class ServiceExample {
                 UniversityType.GOVERMENTAL, "Alqahera@gmail.com", 7000d,
                 Instant.now(), Arrays.asList(st1, st2));
         //iUniServiceEx.add(uni);
-        iUniServiceEx.getStudentUniversityId(37L);
+        // iUniServiceEx.getStudentUniversityId(37L);
+        Address address3 = new Address("Tamra", "Amru street", -12);
+        //iAddServiceEx.add(address3);
+        System.out.println(iUniServiceEx.get(1L));
         //************************************************
         // iUniServiceEx.delete(62L);
         // iUniServiceEx.update(31L,uni);

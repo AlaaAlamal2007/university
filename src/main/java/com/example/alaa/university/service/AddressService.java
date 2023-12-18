@@ -36,14 +36,16 @@ public class AddressService implements IAddressService {
             throw new ArgumentAddressException("street number must no be negative");
         }
         Address addressToAdded = iAddRepository.add(address);
-        Long addressToAddId = addressToAdded.getId();
-        return get(addressToAddId);
+        return addressToAdded;
     }
 
     @Override
     public void delete(Long id) {
-        get(id);
-        iAddRepository.get(id);
+        Address address = iAddRepository.get(id);
+        if (address == null) {
+            throw new ResourceAddressIsNotFoundException(
+                    "address with id=" + id + " is does not found");
+        }
         iAddRepository.delete(id);
     }
 
@@ -74,7 +76,7 @@ public class AddressService implements IAddressService {
     public Address getUniversityAddressId(Long universityId) {
         Address address = iAddRepository.getUniversityAddressId(universityId);
         if (address == null) {
-            throw new ResourceAddressIsNotFoundException("University with id="
+            throw new ResourceAddressIsNotFoundException("University with id=" + universityId
                     + " does not have address");
         }
         return address;

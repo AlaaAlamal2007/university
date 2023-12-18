@@ -18,10 +18,8 @@ public class UniversityService implements IUniversityService {
     private final IStudentService iStudService;
 
     public UniversityService(IUniversityRepository iUniversityRepository,
-
                              IAddressService iAddreService, IStudentService iStudService) {
         this.iUniversityRepository1 = iUniversityRepository;
-
         this.iAddreService = iAddreService;
         this.iStudService = iStudService;
     }
@@ -57,27 +55,35 @@ public class UniversityService implements IUniversityService {
         List<Student> students = university.getStudents();
         if (students == null) {
             students = new ArrayList<Student>();
+            university.setStudents(students);
         }
         if (!students.isEmpty()) {
-            get(universityId);
             students.forEach(studentEntry -> {
                 iStudService.add(studentEntry, universityId);
             });
         }
-        return get(universityId);
+        return university;
     }
 
     @Override
     public University update(Long id, University updatedUniversity) {
-        get(id);
-        delete(id);
-        University university = add(updatedUniversity);
-        return get(university.getId());
+        University university = iUniversityRepository1.get(id);
+        if (university == null) {
+            throw new ResourceUniversityIsNotFoundException(
+                    "university with id=" + id + " does not exist");
+        }
+        iUniversityRepository1.delete(id);
+        University universityUpdate = iUniversityRepository1.add(updatedUniversity);
+        return universityUpdate;
     }
 
     @Override
     public void delete(Long id) {
-        University uni = get(id);
+        University uni = iUniversityRepository1.get(id);
+        if (uni == null) {
+            throw new
+                    ResourceUniversityIsNotFoundException("university with id=" + id + " does not exist");
+        }
         Long addressUni = uni.getAddress().getId();
         List<Student> students = iStudService.getAllStudentByUniversityId(id);
         if (!students.isEmpty()) {
@@ -97,7 +103,7 @@ public class UniversityService implements IUniversityService {
 
     @Override
     public University getStudentUniversityId(Long studentId) {
-        iStudService.get(studentId);
+        Student student = iStudService.get(studentId);
         University university = iUniversityRepository1.getStudentUniversityId(studentId);
         return university;
     }
