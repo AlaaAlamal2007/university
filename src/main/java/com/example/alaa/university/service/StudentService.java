@@ -22,9 +22,7 @@ public class StudentService implements IStudentService {
                           IAddressRepository iAddRepository,
                           IUniversityRepository iUniRepository) {
         this.iStuRepository = iStuRepository;
-
         this.iAddRepository = iAddRepository;
-
         this.iUniRepository = iUniRepository;
     }
 
@@ -48,7 +46,10 @@ public class StudentService implements IStudentService {
         Student stTobeAdded = iStuRepository.add(student, universityId);
         Long stTobeAddedId = stTobeAdded.getId();
         iStuRepository.setStudentAddressId(stTobeAddedId, newAddress.getId());
-        return get(stTobeAddedId);
+        student.setId(stTobeAddedId);
+        newAddress.setId(newAddress.getId());
+        student.setAddress(newAddress);
+        return student;
     }
 
     private static void validateStudent(Student student) {
@@ -70,17 +71,25 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student update(Long id, Student updatedStudent) {
-        Student student = get(id);
+        Student student = iStuRepository.get(id);
+        if (student == null) {
+            throw new ResourceStudentIsNotFoundException("student with id=" +
+                    id + " does not found");
+        }
         University university = iUniRepository.getStudentUniversityId(id);
         Long universityId = university.getId();
-        delete(id);
-        Student newStudent = add(updatedStudent, universityId);
-        return get(newStudent.getId());
+        iStuRepository.delete(id);
+        Student newStudent = iStuRepository.add(updatedStudent, universityId);
+        return newStudent;
     }
 
     @Override
     public void delete(Long id) {
-        Student st = get(id);
+        Student st = iStuRepository.get(id);
+        if (st == null) {
+            throw new ResourceStudentIsNotFoundException("student with id=" +
+                    id + " does not found");
+        }
         Long stAddressId = st.getAddress().getId();
         iStuRepository.setStudentUniversityAndAddressIdNull(id);
         iStuRepository.delete(id);
@@ -106,15 +115,23 @@ public class StudentService implements IStudentService {
 
     @Override
     public Student setStudentUniversityAndAddressIdNull(Long studentId) {
-        get(studentId);
-        iStuRepository.setStudentUniversityAndAddressIdNull(studentId);
-        return get(studentId);
+        Student student = iStuRepository.get(studentId);
+        if (student == null) {
+            throw new ResourceStudentIsNotFoundException("student with id=" +
+                    studentId + " does not found");
+        }
+        student = iStuRepository.setStudentUniversityAndAddressIdNull(studentId);
+        return student;
     }
 
     @Override
     public Student setStudentAddressId(Long studentId, Long addressId) {
-        get(studentId);
-        iStuRepository.setStudentAddressId(studentId, addressId);
-        return get(studentId);
+        Student student = iStuRepository.get(studentId);
+        if (student == null) {
+            throw new ResourceStudentIsNotFoundException("student with id=" +
+                    studentId + " does not found");
+        }
+        Student student1 = iStuRepository.setStudentAddressId(studentId, addressId);
+        return student1;
     }
 }
