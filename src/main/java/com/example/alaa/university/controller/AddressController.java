@@ -5,6 +5,8 @@ import com.example.alaa.university.service.IAddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/addresses")
 @RestController
 public class AddressController {
@@ -33,7 +35,7 @@ public class AddressController {
     }
 
     @PutMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     Address update(@PathVariable Long id, @RequestBody Address updatedAddress) {
         return iAddressServiceC.update(id, updatedAddress);
     }
@@ -46,5 +48,10 @@ public class AddressController {
     @GetMapping("/universities/{universityId}")
     Address getUniversityAddressId(@PathVariable Long universityId) {
         return iAddressServiceC.getUniversityAddressId(universityId);
+    }
+
+    @GetMapping
+    List<Address> getAll() {
+        return iAddressServiceC.getAll();
     }
 }

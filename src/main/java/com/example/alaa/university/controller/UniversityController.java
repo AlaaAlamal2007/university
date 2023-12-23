@@ -26,9 +26,8 @@ public class UniversityController {
     public University add(@RequestBody University university) {
         return iUniversityServiceC.add(university);
     }
-
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public University update(@PathVariable Long id, @RequestBody University updatedUniversity) {
         return iUniversityServiceC.update(id, updatedUniversity);
     }

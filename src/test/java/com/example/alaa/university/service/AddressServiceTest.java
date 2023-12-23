@@ -150,4 +150,20 @@ class AddressServiceTest {
                 });
         assertEquals("University with id=50 does not have address", addressIsNotFoundExceptionU.getMessage());
     }
+
+    @Test
+    void updateSuccess(){
+        Address address=new Address("ASD","ASF ST",9);
+        address.setId(10L);
+        Address oldAddress=new Address("ASDE","aer st",2);
+        oldAddress.setId(11L);
+        Mockito.when(iAddRepositoryTest.get(anyLong())).thenReturn(oldAddress);
+        doNothing().when(iAddRepositoryTest).delete(anyLong());
+        Mockito.when(addressServiceTest.add(address)).thenReturn(address);
+        Mockito.when(iAddRepositoryTest.add(any())).thenReturn(address);
+        Mockito.when(addressServiceTest.get(anyLong())).thenReturn(address);
+        Address updatedAddress=addressServiceTest.update(11L,oldAddress);
+        assertEquals(10L,updatedAddress.getId());
+        assertNotNull(updatedAddress);
+    }
 }

@@ -1,0 +1,461 @@
+{
+	"info": {
+		"_postman_id": "eff4cf36-4c8b-46c9-9827-9edc1b98cade",
+		"name": "Test Students API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31709530"
+	},
+	"item": [
+		{
+			"name": "Create student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful create student\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.collectionVariables.set(\"created_id\", jsonData.id);\r",
+							"    pm.expect(jsonData.id).to.be.not.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ameer now posted\",\r\n    \"address\": {\r\n        \r\n        \"cityName\": \"Almukaber\",\r\n        \"streetName\": \"AmericanSt\",\r\n        \"streetNumber\": 10\r\n    },\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\": \"1990-08-18T14:38:40.108Z\",\r\n    \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 5000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/universities/{{university_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"universities",
+						"{{university_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful get student\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/students/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that response is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/students/700",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"700"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"studentId\", 171);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n    \"name\": \"Ameer now created***\",\r\n    \"address\": {\r\n        \"cityName\": \"Almukaber now created\",\r\n        \"streetName\": \"AmericanSt\",\r\n        \"streetNumber\": 10\r\n    },\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\": \"1990-08-18T14:38:40.108Z\",\r\n    \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 5000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Exist student",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"studentId\",162);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/students/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Student no exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response status is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/students/500",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"500"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create student with null address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"pm.test(\"check that the message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"Student must have address \");\r",
+							"});\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ameer now posted\",\r\n    \"address\":null,\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\": \"1990-08-18T14:38:40.108Z\",\r\n    \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 5000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/universities/3",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"universities",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create student with birthdate null",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"pm.test(\"check that the message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"Student must have birthdate \");\r",
+							"});\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ameer now posted\",\r\n    \"address\" :{\r\n        \"cityName\":\"ASD\",\r\n        \"streetName\":\"asdf\",\r\n        \"streetNumber\":9\r\n    },\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\": null,\r\n    \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 5000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/universities/3",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"universities",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create student with graduated day is before registration date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"pm.test(\"check that the message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"Student registration Date is before graduated date \");\r",
+							"});\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ameer now posted\",\r\n    \"address\" :{\r\n        \"cityName\":\"ASD\",\r\n        \"streetName\":\"asdf\",\r\n        \"streetNumber\":9\r\n    },\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\":\"1990-08-18T14:38:40.108Z\",\r\n    \"registrationDate\": \"2030-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 5000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/universities/3",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"universities",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create student with fee payment less than 2000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"pm.test(\"check that the message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"Student fee must be grater than 2000 \");\r",
+							"});\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ameer now posted\",\r\n    \"address\" :{\r\n        \"cityName\":\"ASD\",\r\n        \"streetName\":\"asdf\",\r\n        \"streetNumber\":9\r\n    },\r\n    \"gender\": \"MALE\",\r\n    \"graduated\": false,\r\n    \"birthDate\":\"1990-08-18T14:38:40.108Z\",\r\n    \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n    \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n    \"paymentFee\": 1000.0,\r\n    \"email\": \"Ameeer@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/students/universities/3",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"students",
+						"universities",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "studentId",
+			"value": "70"
+		},
+		{
+			"key": "studentId",
+			"value": ""
+		},
+		{
+			"key": "created_id",
+			"value": ""
+		},
+		{
+			"key": "university_id",
+			"value": "129"
+		}
+	]
+}
