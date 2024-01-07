@@ -20,7 +20,7 @@ public class StudentExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler({ArgumentStudentException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorMessage handleArgumentStudentException(
             ArgumentStudentException exception) {
         return new ErrorMessage(exception.getMessage());

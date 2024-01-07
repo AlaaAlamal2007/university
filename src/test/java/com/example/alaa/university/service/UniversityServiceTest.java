@@ -162,17 +162,29 @@ class UniversityServiceTest {
 
     @Test
     void updateSuccess() {
-        University oldUniversity = new University();
-        oldUniversity.setId(5L);
-        University university = new University();
-        university.setId(12L);
-        Mockito.when(iUniversityRepository.get(anyLong())).thenReturn(oldUniversity);
-        doNothing().when(iUniversityRepository).delete(anyLong());
-        Mockito.when(iUniversityRepository.add(any())).thenReturn(university);
-        University updatedUniversity = universityService.update(10L, oldUniversity);
+        Address address=new Address("oldasdf","oldasd st",1);
+        address.setId(12L);
+        University oldUniversity = new University("Alblqa", address,
+                UniversityType.GOVERMENTAL, "Alblqa@gmail.com", 5000d,
+                Instant.parse("2017-02-03T11:25:30.00Z"), null);
+        oldUniversity.setId(10L);
+        oldUniversity.setAddress(address);
+        Address newAddress=new Address("newasdf","newasd st",1);
+        newAddress.setId(13L);
+        University newUniversity = new University("Alblqa", newAddress,
+                UniversityType.GOVERMENTAL, "Alblqa@gmail.com", 5000d,
+                Instant.parse("2017-02-03T11:25:30.00Z"), Arrays.asList(new Student(),new Student()));
+        newUniversity.setId(12L);
+        newUniversity.setAddress(newAddress);
+        Mockito.when(iUniversityRepository.get(10L)).thenReturn(oldUniversity);
+        Mockito.when(iAddressService.getUniversityAddressId(10L)).thenReturn(address);
+        Mockito.when(iAddressService.add(newAddress)).thenReturn(newAddress);
+        Mockito.when(iUniversityRepository.add(newUniversity)).thenReturn(newUniversity);
+        University updatedUniversity = universityService.update(10L, newUniversity);
         assertNotNull(updatedUniversity);
         assertEquals(12L, updatedUniversity.getId());
         verify(iUniversityRepository).delete(10L);
+        verify(iStudService,times(2)).add(any(),anyLong());
     }
 
     @Test
@@ -194,7 +206,8 @@ class UniversityServiceTest {
                 UniversityType.GOVERMENTAL, "Alblqa@gmail.com", 5000d,
                 Instant.parse("2017-02-03T11:25:30.00Z"), students);
         university.setId(20L);
-        Mockito.when(iUniversityRepository.get(anyLong())).thenReturn(university);
+        Mockito.when(iUniversityRepository.get(20L)).thenReturn(university);
+        Mockito.when(iAddressService.getUniversityAddressId(20L)).thenReturn(address);
         Mockito.when(iStudService.getAllStudentByUniversityId(anyLong())).thenReturn(university.getStudents());
         doNothing().when(iStudService).delete(anyLong());
         doNothing().when(iAddressService).delete(anyLong());
@@ -225,14 +238,15 @@ class UniversityServiceTest {
                 Instant.parse("2017-02-03T11:25:30.00Z"), students);
         university.setId(20L);
         Mockito.when(iUniversityRepository.get(anyLong())).thenReturn(university);
+        Mockito.when(iAddressService.getUniversityAddressId(anyLong())).thenReturn(address);
         Mockito.when(iStudService.getAllStudentByUniversityId(anyLong())).thenReturn(university.getStudents());
         doNothing().when(iStudService).delete(1L);
         doNothing().when(iStudService).delete(2L);
         doNothing().when(iStudService).delete(3L);
         doNothing().when(iAddressService).delete(anyLong());
-        doNothing().when(iUniversityRepository).delete(anyLong());
+        doNothing().when(iUniversityRepository).delete(20L);
         universityService.delete(20L);
-        verify(iAddressService, times(1)).delete(anyLong());
+        verify(iAddressService, times(1)).delete(10L);
         verify(iUniversityRepository, times(1)).delete(20L);
         verify(iStudService, times(3)).delete(any());
     }
@@ -256,7 +270,7 @@ class UniversityServiceTest {
                 Instant.parse("2017-02-03T11:25:30.00Z"), students);
         university.setId(20L);
         Mockito.when(iUniversityRepository.get(anyLong())).thenReturn(university);
-        universityService.delete(20L);
+        universityService.setUniversityAddressIdNull(20L);
         verify(iUniversityRepository).setUniversityAddressIdNull(20L);
     }
 

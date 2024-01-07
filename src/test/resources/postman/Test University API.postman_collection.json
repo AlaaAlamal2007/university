@@ -1,0 +1,434 @@
+{
+	"info": {
+		"_postman_id": "035230c0-734c-403e-af8c-4aa90ecafbfa",
+		"name": "Test University API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31709530"
+	},
+	"item": [
+		{
+			"name": "Get University Sucess",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful get university\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/universities/2",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get University failed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check response status is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/universities/300",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"300"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create university",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful created university\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"pm.test(\"check that student length is 2\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.students.length).to.eql(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now created\",\r\n    \"address\": {\r\n        \r\n        \"cityName\": \"AlqudsAlMukabe now created\",\r\n        \"streetName\": \"Amr St\",\r\n        \"streetNumber\": 1\r\n    },\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 5000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": [\r\n        {\r\n            \r\n            \"name\": \"st1 now created\",\r\n            \"address\": {\r\n                \"id\": 203,\r\n                \"cityName\": \"Almukaber\",\r\n                \"streetName\": \"AmericanSt\",\r\n                \"streetNumber\": 10\r\n            },\r\n            \"gender\": \"MALE\",\r\n            \"graduated\": false,\r\n            \"birthDate\": \"1990-08-18T14:38:40.108Z\",\r\n            \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n            \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n            \"paymentFee\": 1000.0,\r\n            \"email\": \"zien@gmail.com\"\r\n        },\r\n        {\r\n            \r\n            \"name\": \"Mazen now created\",\r\n            \"address\": {\r\n                \r\n                \"cityName\": \"Almsrara88\",\r\n                \"streetName\": \"Alhrian\",\r\n                \"streetNumber\": 3\r\n            },\r\n            \"gender\": \"MALE\",\r\n            \"graduated\": false,\r\n            \"birthDate\": \"2023-11-29T17:27:59.459Z\",\r\n            \"registrationDate\": \"2023-11-29T17:27:59.459Z\",\r\n            \"graduatedDate\": \"2027-11-29T17:27:59.459Z\",\r\n            \"paymentFee\": 5000.0,\r\n            \"email\": \"mazen@gmail.com\"\r\n        }\r\n        \r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create university without student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful created university without student\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"pm.test(\"check that student length is 0\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.students.length).to.eql(0);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now created\",\r\n    \"address\": {\r\n        \r\n        \"cityName\": \"AlqudsAlMukabe now created\",\r\n        \"streetName\": \"Amr St\",\r\n        \"streetNumber\": 1\r\n    },\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 5000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete University",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful delete university\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/universities/85",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"85"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete University does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check response status is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Your test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var university_id=pm.collectionVariables.get(\"university_id\");\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"university with id=\"+university_id+\" does not exist\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"university_id\", 82);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/universities/{{university_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"{{university_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create university with null address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check that message is shown accordinnlay\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"university must have an address\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now created\",\r\n    \"address\":null,\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 5000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create university with study cost less than 2000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check that message is shown accordinnlay to study cost\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"university cost must be greater than 2000\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now created\",\r\n    \"address\":{\r\n        \r\n        \"cityName\": \"AlqudsAlMukabe now created\",\r\n        \"streetName\": \"Amr St\",\r\n        \"streetNumber\": 1\r\n    },\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 1000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update university without student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now updated\",\r\n    \"address\": {\r\n        \r\n        \"cityName\": \"AlqudsAlMukabe now created\",\r\n        \"streetName\": \"Amr St\",\r\n        \"streetNumber\": 1\r\n    },\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 5000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities/104",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"104"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update university with student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"successfull update university response status 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"check add students when upade university\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.students.length).to.eql(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\": \"university now created **\",\r\n    \"address\": {\r\n        \r\n        \"cityName\": \"AlqudsAlMukabe now created\",\r\n        \"streetName\": \"Amr St\",\r\n        \"streetNumber\": 1\r\n    },\r\n    \"universityType\": \"GOVERMENTAL\",\r\n    \"email\": \"AlzrqaUniversity@gmail.com\",\r\n    \"studyCost\": 5000.0,\r\n    \"startOperatingDate\": \"2023-11-29T17:27:59.587870Z\",\r\n    \"students\": [\r\n        {\r\n            \r\n            \"name\": \"st1 now created\",\r\n            \"address\": {\r\n                \"id\": 203,\r\n                \"cityName\": \"Almukaber\",\r\n                \"streetName\": \"AmericanSt\",\r\n                \"streetNumber\": 10\r\n            },\r\n            \"gender\": \"MALE\",\r\n            \"graduated\": false,\r\n            \"birthDate\": \"1990-08-18T14:38:40.108Z\",\r\n            \"registrationDate\": \"2020-08-18T14:38:40.108Z\",\r\n            \"graduatedDate\": \"2024-08-18T14:38:40.108Z\",\r\n            \"paymentFee\": 1000.0,\r\n            \"email\": \"zien@gmail.com\"\r\n        },\r\n        {\r\n            \r\n            \"name\": \"Mazen now created\",\r\n            \"address\": {\r\n                \r\n                \"cityName\": \"Almsrara88\",\r\n                \"streetName\": \"Alhrian\",\r\n                \"streetNumber\": 3\r\n            },\r\n            \"gender\": \"MALE\",\r\n            \"graduated\": false,\r\n            \"birthDate\": \"2023-11-29T17:27:59.459Z\",\r\n            \"registrationDate\": \"2023-11-29T17:27:59.459Z\",\r\n            \"graduatedDate\": \"2027-11-29T17:27:59.459Z\",\r\n            \"paymentFee\": 5000.0,\r\n            \"email\": \"mazen@gmail.com\"\r\n        }\r\n        \r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/universities/109",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"universities",
+						"109"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "university_id",
+			"value": "80"
+		}
+	]
+}

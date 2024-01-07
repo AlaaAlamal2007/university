@@ -142,8 +142,11 @@ class StudentServiceTest {
         Mockito.when(iStuRepository.get(anyLong())).thenReturn(oldStudent);
         doNothing().when(iStuRepository).delete(anyLong());
         Mockito.when(iUniRepository.getStudentUniversityId(anyLong())).thenReturn(university);
-        Mockito.when(iStuRepository.add(any(), anyLong())).thenReturn(newStudent);
-        Student updatedStudent = studentService.update(10L, oldStudent);
+       Mockito.when(iAddRepository.getStudentAddressId(10L)).thenReturn(address1);
+       // Mockito.when(studentService.add(newStudent, 3L)).thenReturn(newStudent);
+       Mockito.when(iAddRepository.add(any())).thenReturn(address2);
+        Mockito.when(iStuRepository.add(newStudent,3L)).thenReturn(newStudent);
+        Student updatedStudent = studentService.update(10L, newStudent);
         assertNotNull(updatedStudent);
         assertEquals(20L, updatedStudent.getId());
         verify(iStuRepository).delete(10l);
@@ -166,9 +169,10 @@ class StudentServiceTest {
         student.setId(32L);
         student.setAddress(address);
         Mockito.when(iStuRepository.get(anyLong())).thenReturn(student);
+        Mockito.when(iAddRepository.getStudentAddressId(10L)).thenReturn(address);
         Mockito.when(iStuRepository.setStudentUniversityAndAddressIdNull(anyLong())).thenReturn(new Student());
         doNothing().when(iStuRepository).delete(anyLong());
-        doNothing().when(iAddRepository).delete(anyLong());
+        doNothing().when(iAddRepository).delete(20L);
         studentService.delete(10L);
         verify(iStuRepository).setStudentUniversityAndAddressIdNull(10L);
         verify(iStuRepository).get(10L);

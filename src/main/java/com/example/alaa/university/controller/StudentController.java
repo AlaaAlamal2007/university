@@ -28,7 +28,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public Student update(@PathVariable Long id, @RequestBody Student updatedStudent) {
         return iStudentServiceC.update(id, updatedStudent);
     }

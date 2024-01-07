@@ -1,0 +1,724 @@
+{
+	"info": {
+		"_postman_id": "6079a540-1d99-447d-ad57-32a940c61275",
+		"name": "Test Address API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31709530"
+	},
+	"item": [
+		{
+			"name": "Create address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful create address\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"pm.test(\"check that response id does not null\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.id).to.be.not.null;\r",
+							"     pm.expect(jsonData.streetNumber).to.be.eql(13);\r",
+							"     pm.collectionVariables.set(\"created_id\", jsonData.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \r\n    \"cityName\": \"AlThouri\",\r\n    \"streetName\": \"Thouri Street\",\r\n    \"streetNumber\": 13\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that newly address id exist\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Address failed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check response status is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/500",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"500"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Updated newly address sccessful\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"check that id changed and city name equals city Updated Now\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.id).to.be.not.eql(309);\r",
+							"    pm.expect(jsonData.cityName).to.be.eql(\"city Updated Now\");\r",
+							"    pm.collectionVariables.set(\"created_id\", jsonData.id);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n    \"cityName\": \"city Updated Now\",\r\n    \"streetName\": \"ALmanar Street updated now\",\r\n    \"streetNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete previous address generated successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete  previous address not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"check that previous address does not exist\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Check that response message is shown accordinnly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var createdId= pm.collectionVariables.get(\"created_id\");\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"address with id=\" + createdId + \" is does not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/{{created_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"{{created_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All addresses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get all addresses successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get  University address Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get student university address Id successfully\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"check that university address exist\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.id).to.be.not.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/universities/43",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"universities",
+						"43"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get address university negative",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//pm.collectionVariables.set(\"university_id\", 300);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"that university does not exist\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var university_id= pm.collectionVariables.get(\"university_id\");\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"University with id=\" + university_id + \" does not have address\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/universities/{{university_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"universities",
+						"{{university_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get student address successfull\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"check that student has an address\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.id).to.be.not.null;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"student_id\", 70);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/students/{{student_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"students",
+						"{{student_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student address does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get response 404 that student not exist\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"check that response message is correct\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var student_id =pm.collectionVariables.get(\"student_id\");\r",
+							"    pm.expect(jsonData.message).to.be.eql( \"student with id=\" +\r",
+							"                   student_id + \" does not have address\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"student_id\",400);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost/university/api/addresses/students/{{student_id}}",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses",
+						"students",
+						"{{student_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create address with null cityName Argument",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"pm.test(\"check thatresponse message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"every field of address must not be null\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"cityName\": null,\r\n    \"streetName\":\"ASD ST\",\r\n    \"streetNumber\":10\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create address with null streetName Argument",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"every field of address must not be null\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"cityName\": \"ASDFG\",\r\n    \"streetName\":null,\r\n    \"streetNumber\":10\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update address with null streetName Argument",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"every field of address must not be null\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"cityName\": \"ASDFG\",\r\n    \"streetName\":null,\r\n    \"streetNumber\":10\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create address with null streetNumberArgument",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"every field of address must not be null\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"cityName\": \"ASDF\",\r\n    \"streetName\":\"ASD ST\",\r\n    \"streetNumber\":null\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create address with negative streetNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that response is 409\", function () {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							"pm.test(\"check that response message is shown accordinnaly\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.be.eql(\"street number must no be negative\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"cityName\": \"ASD\",\r\n    \"streetName\":\"ASD ST\",\r\n    \"streetNumber\":-10\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/university/api/addresses",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"university",
+						"api",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "created_id",
+			"value": ""
+		},
+		{
+			"key": "university_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "student_id",
+			"value": ""
+		}
+	]
+}

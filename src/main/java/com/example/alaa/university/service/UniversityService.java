@@ -62,6 +62,8 @@ public class UniversityService implements IUniversityService {
                 iStudService.add(studentEntry, universityId);
             });
         }
+        university.setId(universityId);
+        university.setAddress(newAdressToDataBase);
         return university;
     }
 
@@ -72,8 +74,8 @@ public class UniversityService implements IUniversityService {
             throw new ResourceUniversityIsNotFoundException(
                     "university with id=" + id + " does not exist");
         }
-        iUniversityRepository1.delete(id);
-        University universityUpdate = iUniversityRepository1.add(updatedUniversity);
+        delete(id);
+        University universityUpdate = add(updatedUniversity);
         return universityUpdate;
     }
 
@@ -84,7 +86,8 @@ public class UniversityService implements IUniversityService {
             throw new
                     ResourceUniversityIsNotFoundException("university with id=" + id + " does not exist");
         }
-        Long addressUni = uni.getAddress().getId();
+        Address address=iAddreService.getUniversityAddressId(id);
+        Long addressUni =address.getId();
         List<Student> students = iStudService.getAllStudentByUniversityId(id);
         if (!students.isEmpty()) {
             students.forEach(student -> iStudService.delete(student.getId()));

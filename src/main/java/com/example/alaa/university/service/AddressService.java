@@ -56,9 +56,13 @@ public class AddressService implements IAddressService {
 
     @Override
     public Address update(Long id, Address updatedAddress) {
-        get(id);
-        delete(id);
-        Address newAddress = iAddRepository.add(updatedAddress);
+        Address address = iAddRepository.get(id);
+        if (address == null) {
+            throw new ResourceAddressIsNotFoundException(
+                    "address with id=" + id + " is does not found");
+        }
+        iAddRepository.delete(id);
+        Address newAddress = add(updatedAddress);
         return get(newAddress.getId());
     }
 

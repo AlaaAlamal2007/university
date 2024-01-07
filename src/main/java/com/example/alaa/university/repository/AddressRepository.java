@@ -88,17 +88,28 @@ public class AddressRepository implements IAddressRepository {
 
     @Override
     public Address getStudentAddressId(Long studentId) {
-        return jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
-                        "left join students as s on  ad.id=s.address_id\n" +
-                        "where s.id=?",
-
-                rowMapper, studentId);
+        Address address = null;
+        try {
+            address = jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
+                            "left join students as s on  ad.id=s.address_id\n" +
+                            "where s.id=?",
+                    rowMapper, studentId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return address;
     }
 
     @Override
     public Address getUniversityAddressId(Long universityId) {
-        return jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
-                "left join universities as u on  ad.id=u.address_id\n" +
-                "where u.id=?", rowMapper, universityId);
+        Address address = null;
+        try {
+            address = jdbcTemplate.queryForObject("select ad.id,ad.city_name,ad.street_name,ad.street_number from addresses as ad\n" +
+                    "left join universities as u on  ad.id=u.address_id\n" +
+                    "where u.id=?", rowMapper, universityId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return address;
     }
 }

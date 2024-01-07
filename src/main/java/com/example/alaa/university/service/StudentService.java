@@ -59,8 +59,8 @@ public class StudentService implements IStudentService {
         if (student.getBirthDate() == null) {
             throw new ArgumentStudentException("Student must have birthdate ");
         }
-        if (student.getPaymentFee() <= 1000d && student.getPaymentFee() >= 2000d) {
-            throw new ArgumentStudentException("Student fee must be between (2000,10000) ");
+        if (student.getPaymentFee() <2000d) {
+            throw new ArgumentStudentException("Student fee must be grater than 2000 ");
         }
         if (student.getGraduatedDate() != null) {
             if (student.getRegistrationDate().isAfter(student.getGraduatedDate())) {
@@ -78,8 +78,8 @@ public class StudentService implements IStudentService {
         }
         University university = iUniRepository.getStudentUniversityId(id);
         Long universityId = university.getId();
-        iStuRepository.delete(id);
-        Student newStudent = iStuRepository.add(updatedStudent, universityId);
+        delete(id);
+        Student newStudent = add(updatedStudent, universityId);
         return newStudent;
     }
 
@@ -90,7 +90,8 @@ public class StudentService implements IStudentService {
             throw new ResourceStudentIsNotFoundException("student with id=" +
                     id + " does not found");
         }
-        Long stAddressId = st.getAddress().getId();
+        Address address=iAddRepository.getStudentAddressId(id);
+        Long stAddressId = address.getId();
         iStuRepository.setStudentUniversityAndAddressIdNull(id);
         iStuRepository.delete(id);
         iAddRepository.delete(stAddressId);
