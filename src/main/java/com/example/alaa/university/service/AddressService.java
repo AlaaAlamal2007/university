@@ -3,26 +3,26 @@ package com.example.alaa.university.service;
 import com.example.alaa.university.domain.Address;
 import com.example.alaa.university.exceptions.ArgumentAddressException;
 import com.example.alaa.university.exceptions.ResourceAddressIsNotFoundException;
-import com.example.alaa.university.repository.IAddressRepository;
+import com.example.alaa.university.repository.AddressRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AddressService implements IAddressService {
-    private final IAddressRepository iAddRepository;
+    private final AddressRepo addressRepo;
 
-    public AddressService(IAddressRepository iRepository) {
-        this.iAddRepository = iRepository;
+    public AddressService(AddressRepo addressRepo) {
+        this.addressRepo = addressRepo;
     }
 
     @Override
     public Address get(Long id) {
-        Address address = iAddRepository.get(id);
-        if (address == null) {
-            throw new ResourceAddressIsNotFoundException(
-                    "address with id=" + id + " is does not found");
-        }
+        Address address = addressRepo.findById(id)
+                .orElseThrow(
+                        () -> new ResourceAddressIsNotFoundException(
+                                "address with id=" + id + " is does not found")
+                );
         return address;
     }
 
@@ -35,54 +35,32 @@ public class AddressService implements IAddressService {
         if (address.getStreetNumber() < 0) {
             throw new ArgumentAddressException("street number must no be negative");
         }
-        Address addressToAdded = iAddRepository.add(address);
+        Address addressToAdded = addressRepo.save(address);
         return addressToAdded;
     }
 
     @Override
     public void delete(Long id) {
-        Address address = iAddRepository.get(id);
-        if (address == null) {
-            throw new ResourceAddressIsNotFoundException(
-                    "address with id=" + id + " is does not found");
-        }
-        iAddRepository.delete(id);
+        Address address = addressRepo.findById(id).orElseThrow(
+                () -> new ResourceAddressIsNotFoundException(
+                        "address with id=" + id + " is does not found")
+        );
+        addressRepo.deleteById(id);
     }
 
     @Override
     public List<Address> getAll() {
-        return iAddRepository.getAll();
+        return addressRepo.findAll();
     }
 
     @Override
     public Address update(Long id, Address updatedAddress) {
-        Address address = iAddRepository.get(id);
-        if (address == null) {
-            throw new ResourceAddressIsNotFoundException(
-                    "address with id=" + id + " is does not found");
-        }
-        iAddRepository.delete(id);
-        Address newAddress = add(updatedAddress);
-        return get(newAddress.getId());
-    }
-
-    @Override
-    public Address getStudentAddressId(Long studentId) {
-        Address address = iAddRepository.getStudentAddressId(studentId);
-        if (address == null) {
-            throw new ResourceAddressIsNotFoundException("student with id="
-                    + studentId + " does not have address");
-        }
-        return address;
-    }
-
-    @Override
-    public Address getUniversityAddressId(Long universityId) {
-        Address address = iAddRepository.getUniversityAddressId(universityId);
-        if (address == null) {
-            throw new ResourceAddressIsNotFoundException("University with id=" + universityId
-                    + " does not have address");
-        }
-        return address;
+        Address address = addressRepo.findById(id).orElseThrow(
+                () -> new ResourceAddressIsNotFoundException(
+                        "address with id=" + id + " is does not found")
+        );
+        addressRepo.deleteById(id);
+        Address newAddress = addressRepo.save(updatedAddress);
+        return newAddress;
     }
 }

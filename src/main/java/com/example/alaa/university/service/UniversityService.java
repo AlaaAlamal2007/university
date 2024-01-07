@@ -1,11 +1,12 @@
 package com.example.alaa.university.service;
 
-import com.example.alaa.university.domain.Address;
 import com.example.alaa.university.domain.Student;
 import com.example.alaa.university.domain.University;
 import com.example.alaa.university.exceptions.ArgumentUniversityException;
 import com.example.alaa.university.exceptions.ResourceUniversityIsNotFoundException;
-import com.example.alaa.university.repository.IUniversityRepository;
+import com.example.alaa.university.repository.AddressRepo;
+import com.example.alaa.university.repository.StudentRepo;
+import com.example.alaa.university.repository.UniversityRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,28 +14,34 @@ import java.util.List;
 
 @Service
 public class UniversityService implements IUniversityService {
-    private final IUniversityRepository iUniversityRepository1;
-    private final IAddressService iAddreService;
+    private final UniversityRepo universityRepo;
+    private final AddressRepo addressRepo;
+    private final StudentRepo studentRepo;
+
     private final IStudentService iStudService;
 
-    public UniversityService(IUniversityRepository iUniversityRepository,
-                             IAddressService iAddreService, IStudentService iStudService) {
-        this.iUniversityRepository1 = iUniversityRepository;
-        this.iAddreService = iAddreService;
+    public UniversityService(UniversityRepo universityRepo,
+                             AddressRepo addressRepo, StudentRepo studentRepo,
+                             IStudentService iStudService) {
+        this.universityRepo = universityRepo;
+        this.addressRepo = addressRepo;
+        this.studentRepo = studentRepo;
         this.iStudService = iStudService;
     }
 
     @Override
     public University get(Long id) {
-        University university = iUniversityRepository1.get(id);
-        if (university == null) {
-            throw new ResourceUniversityIsNotFoundException(
-                    "university with id=" + id + " does not exist");
+        University university = universityRepo.findById(id).orElseThrow(
+                () -> new ResourceUniversityIsNotFoundException(
+                        "university with id=" + id + " does not exist")
+        );
+        List<Student> students = studentRepo.findAllByUniversityId(id);
+        if (!students.isEmpty() && students != null) {
+            university.setStudents(students);
+        } else {
+            List<Student> studentList = new ArrayList<>();
+            university.setStudents(studentList);
         }
-        Address address = iAddreService.getUniversityAddressId(id);
-        university.setAddress(address);
-        List<Student> students = iStudService.getAllStudentByUniversityId(id);
-        university.setStudents(students);
         return university;
     }
 
@@ -47,29 +54,28 @@ public class UniversityService implements IUniversityService {
             throw new ArgumentUniversityException("university cost must be " +
                     "greater than 2000");
         }
-        Address address = university.getAddress();
-        Address newAdressToDataBase = iAddreService.add(address);
-        University uniToBeAdded = iUniversityRepository1.add(university);
-        Long universityId = uniToBeAdded.getId();
-        iUniversityRepository1.setUniversityAddressId(universityId, newAdressToDataBase.getId());
-        List<Student> students = university.getStudents();
-        if (students == null) {
-            students = new ArrayList<Student>();
-            university.setStudents(students);
-        }
-        if (!students.isEmpty()) {
-            students.forEach(studentEntry -> {
-                iStudService.add(studentEntry, universityId);
+        University savedUniversity = new University();
+        university.setName(university.getName());
+        university.setAddress(university.getAddress());
+        university.setUniversityType(university.getUniversityType());
+        university.setEmail(university.getEmail());
+        university.setStudyCost(university.getStudyCost());
+        university.setStartOperatingDate(university.getStartOperatingDate());
+        university.setStudents(university.getStudents());
+        savedUniversity = universityRepo.save(university);
+        Long uniId = savedUniversity.getId();
+        if (university.getStudents() != null && !university.getStudents().isEmpty()) {
+            List<Student> students = new ArrayList<>(university.getStudents());
+            students.forEach(st -> {
+                iStudService.add(st, uniId);
             });
         }
-        university.setId(universityId);
-        university.setAddress(newAdressToDataBase);
-        return university;
+        return savedUniversity;
     }
 
     @Override
     public University update(Long id, University updatedUniversity) {
-        University university = iUniversityRepository1.get(id);
+        University university = get(id);
         if (university == null) {
             throw new ResourceUniversityIsNotFoundException(
                     "university with id=" + id + " does not exist");
@@ -81,39 +87,21 @@ public class UniversityService implements IUniversityService {
 
     @Override
     public void delete(Long id) {
-        University uni = iUniversityRepository1.get(id);
+        University uni = get(id);
         if (uni == null) {
             throw new
                     ResourceUniversityIsNotFoundException("university with id=" + id + " does not exist");
         }
-        Address address=iAddreService.getUniversityAddressId(id);
-        Long addressUni =address.getId();
-        List<Student> students = iStudService.getAllStudentByUniversityId(id);
-        if (!students.isEmpty()) {
-            students.forEach(student -> iStudService.delete(student.getId()));
+        Long uniId = uni.getId();
+        if (uni.getStudents() != null && !uni.getStudents().isEmpty()) {
+            studentRepo.deleteAllStudentByUniversityId(uniId);
         }
-        iUniversityRepository1.setUniversityAddressIdNull(id);
-        iAddreService.delete(addressUni);
-        iUniversityRepository1.delete(id);
-    }
-
-    @Override
-    public University setUniversityAddressIdNull(Long universityId) {
-        get(universityId);
-        University university = iUniversityRepository1.setUniversityAddressIdNull(universityId);
-        return university;
-    }
-
-    @Override
-    public University getStudentUniversityId(Long studentId) {
-        Student student = iStudService.get(studentId);
-        University university = iUniversityRepository1.getStudentUniversityId(studentId);
-        return university;
+        universityRepo.deleteById(id);
     }
 
     @Override
     public List<University> getAll() {
-        List<University> universities = iUniversityRepository1.getAll();
+        List<University> universities = universityRepo.findAll();
         if (universities == null) {
             universities = new ArrayList<>();
         }

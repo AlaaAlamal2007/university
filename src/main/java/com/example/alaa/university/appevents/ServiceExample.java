@@ -6,12 +6,11 @@ import com.example.alaa.university.service.IStudentService;
 import com.example.alaa.university.service.IUniversityService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Arrays;
 
-@Component
+//@Component
 public class ServiceExample {
     private IUniversityService iUniServiceEx;
     private IAddressService iAddServiceEx;
@@ -28,14 +27,14 @@ public class ServiceExample {
     @EventListener(ApplicationReadyEvent.class)
     public void universityServicePlayGround() {
         System.out.println("get university id =2");
-        University university = iUniServiceEx.get(2L);
-        System.out.println(university);
+        //University university = iUniServiceEx.get(2L);
+        //System.out.println(university);
         // System.out.println("get university does not exist");
         Address address = new Address("Qunber7209", "AmericanSt60", 60);
-        Student stUpdated = new Student("AKamal Qasem", address,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "Mazen@gmail.com");
+//        Student stUpdated = new Student("AKamal Qasem", address,
+//                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
+//                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
+//                "Mazen@gmail.com", universityId);
         //istServiceEx.add(stUpdated,54L);
         //istServiceEx.update(75L,stUpdated);
         //iAddServiceEx.add(address);
@@ -43,21 +42,21 @@ public class ServiceExample {
         //System.out.println(address1);
         //istServiceEx.delete(61L);
         // **********************************
-        Address address1 = new Address("Alwad7209", "AmericanSt60", 60);
-        Student st1 = new Student("Tasneem", address1,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
-        Address address2 = new Address("Alwad7209", "AmericanSt60", 60);
-        Student st2 = new Student("Tarteel*****", address2,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
-        University uni = new University("Musanara Uni",
-                new Address("Alquds", "Azhraa St", 20),
-                UniversityType.GOVERMENTAL, "Alqahera@gmail.com", 7000d,
-                Instant.now(), Arrays.asList(st1, st2));
-        //iUniServiceEx.add(uni);
+//        Address address1 = new Address("Alwad7209", "AmericanSt60", 60);
+//        Student st1 = new Student("Tasneem", address1,
+//                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
+//                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
+//                "MTasneem@gmail.com", universityId);
+//        Address address2 = new Address("Alwad7209", "AmericanSt60", 60);
+//        Student st2 = new Student("Tarteel*****", address2,
+//                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
+//                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
+//                "MTasneem@gmail.com", universityId);
+//        University uni = new University("Musanara Uni",
+//                new Address("Alquds", "Azhraa St", 20),
+//                UniversityType.GOVERMENTAL, "Alqahera@gmail.com", 7000d,
+//                Instant.now(), Arrays.asList(st1, st2));
+       // iAddServiceEx.add(address2);
         // iUniServiceEx.getStudentUniversityId(37L);
         Address address3 = new Address("Tamra", "Amru street", -12);
        // iUniServiceEx.delete(82L);

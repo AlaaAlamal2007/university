@@ -1,22 +1,54 @@
 package com.example.alaa.university.domain;
 
+import jakarta.persistence.*;
+
 import java.time.Instant;
 
+@Entity
+@Table(name = "students")
 public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "name")
     private String name;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private Address address;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
     private Gender gender;
+    @Column(name = "graduated")
     private Boolean graduated;
+    @Column(name = "birth_date")
     private Instant birthDate;
+    @Column(name = "registration_date")
     private Instant registrationDate;
+    @Column(name = "graduated_date")
     private Instant graduatedDate;
+    @Column(name = "payment_fee")
     private Double paymentFee;
+    @Column(name = "email")
     private String email;
 
-    public Student(String name, Address address, Gender gender, Boolean graduated, Instant birthDate,
-                   Instant registrationDate, Instant graduatedDate, Double paymentFee, String email) {
+    @JoinColumn(name = "university_id")
+    private Long universityId;
 
+    public Student() {
+    }
+
+    public Long getUniversityId() {
+        return universityId;
+    }
+
+    public void setUniversityId(Long universityId) {
+        this.universityId = universityId;
+    }
+
+    public Student(String name, Address address, Gender gender,
+                   Boolean graduated, Instant birthDate, Instant registrationDate, Instant graduatedDate, Double paymentFee,
+                   String email, Long university_id) {
         this.name = name;
         this.address = address;
         this.gender = gender;
@@ -26,10 +58,7 @@ public class Student {
         this.graduatedDate = graduatedDate;
         this.paymentFee = paymentFee;
         this.email = email;
-    }
-
-    public Student() {
-
+        this.universityId = university_id;
     }
 
     public Long getId() {
