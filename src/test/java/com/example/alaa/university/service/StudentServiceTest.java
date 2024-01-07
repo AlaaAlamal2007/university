@@ -6,9 +6,7 @@ import com.example.alaa.university.domain.Student;
 import com.example.alaa.university.domain.University;
 import com.example.alaa.university.exceptions.ArgumentStudentException;
 import com.example.alaa.university.exceptions.ResourceStudentIsNotFoundException;
-import com.example.alaa.university.repository.IAddressRepository;
-import com.example.alaa.university.repository.IStudentRepository;
-import com.example.alaa.university.repository.IUniversityRepository;
+import com.example.alaa.university.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,6 +19,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,11 +30,9 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
     @Mock
-    private IStudentRepository iStuRepository;
+    private StudentRepo studentRepo;
     @Mock
-    private IAddressRepository iAddRepository;
-    @Mock
-    private IUniversityRepository iUniRepository;
+    private UniversityRepo universityRepo;
 
     @BeforeEach
     void setUp() {
@@ -44,11 +41,17 @@ class StudentServiceTest {
 
     @Test
     void getStudentSuccess() {
-        Mockito.when(iStuRepository.get(30L)).thenReturn(new Student());
-        Mockito.when(iAddRepository.getStudentAddressId(30L)).thenReturn(new Address());
-        Student student = studentService.get(30L);
-        assertNotNull(student);
-        assertNotNull(student.getAddress());
+        Address address1 = new Address("Alwad7209", "AmericanSt60", 60);
+        address1.setId(1L);
+        Student student = new Student("Tasneem", address1,
+                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
+                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
+                "MTasneem@gmail.com", 10L);
+        student.setId(30L);
+        Mockito.when(studentRepo.findById(anyLong())).thenReturn(Optional.of(student));
+        Student getStudent = studentService.get(30L);
+        assertNotNull(getStudent);
+        assertNotNull(getStudent.getAddress());
     }
 
     @Test
@@ -63,16 +66,17 @@ class StudentServiceTest {
     @Test
     void addSuccess() {
         Student student = new Student();
+        Address address = new Address("Alwad7209", "AmericanSt60", 60);
+        address.setId(1L);
+        student.setName("Amjad");
         student.setBirthDate(Instant.parse("1980-02-03T11:25:30.00Z"));
         student.setPaymentFee(4000d);
-        student.setAddress(new Address("Tour", "A street", 1));
-        Mockito.when(iAddRepository.add(any())).thenAnswer((InvocationOnMock invocation) -> {
-            Object firstArgument = invocation.getArgument(0);
-            Address addressArg = (Address) firstArgument;
-            addressArg.setId(30L);
-            return addressArg;
-        });
-        Mockito.when(iStuRepository.add(any(), anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+        student.setAddress(address);
+        student.setGraduated(false);
+        student.setRegistrationDate(Instant.parse("2000-02-03T11:25:30.00Z"));
+        student.setGraduatedDate(null);
+        student.setEmail("Amjad@yahoo.com");
+        Mockito.when(studentRepo.save(any())).thenAnswer((InvocationOnMock invocation) -> {
             Object firstArgument = invocation.getArgument(0);
             Student studentArg = (Student) firstArgument;
             studentArg.setId(40L);
@@ -82,7 +86,7 @@ class StudentServiceTest {
         assertNotNull(studentAdded);
         assertNotNull(studentAdded.getId());
         assertEquals(40L, studentAdded.getId());
-        assertEquals(30, studentAdded.getAddress().getId());
+        assertEquals(1L, studentAdded.getAddress().getId());
     }
 
     @Test
@@ -128,28 +132,25 @@ class StudentServiceTest {
         Student oldStudent = new Student("Tasneem", address1,
                 Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
                 Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
+                "MTasneem@gmail.com", 4L);
         oldStudent.setId(10L);
         Address address2 = new Address("Alwad7209", "AmericanSt60", 60);
         address2.setId(2L);
         Student newStudent = new Student("Tarteel", address2,
                 Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
                 Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
+                "MTasneem@gmail.com", 10L);
         newStudent.setId(20L);
         University university = new University();
         university.setId(3L);
-        Mockito.when(iStuRepository.get(anyLong())).thenReturn(oldStudent);
-        doNothing().when(iStuRepository).delete(anyLong());
-        Mockito.when(iUniRepository.getStudentUniversityId(anyLong())).thenReturn(university);
-       Mockito.when(iAddRepository.getStudentAddressId(10L)).thenReturn(address1);
-       // Mockito.when(studentService.add(newStudent, 3L)).thenReturn(newStudent);
-       Mockito.when(iAddRepository.add(any())).thenReturn(address2);
-        Mockito.when(iStuRepository.add(newStudent,3L)).thenReturn(newStudent);
+        Mockito.when(studentRepo.findById(anyLong())).thenReturn(Optional.of(oldStudent));
+        doNothing().when(studentRepo).deleteById(anyLong());
+        Mockito.when(studentService.add(newStudent, 3L)).thenReturn(newStudent);
+        Mockito.when(studentRepo.save(any())).thenReturn(newStudent);
         Student updatedStudent = studentService.update(10L, newStudent);
         assertNotNull(updatedStudent);
         assertEquals(20L, updatedStudent.getId());
-        verify(iStuRepository).delete(10l);
+        verify(studentRepo).deleteById(10l);
     }
 
     @Test
@@ -168,15 +169,11 @@ class StudentServiceTest {
         Student student = new Student();
         student.setId(32L);
         student.setAddress(address);
-        Mockito.when(iStuRepository.get(anyLong())).thenReturn(student);
-        Mockito.when(iAddRepository.getStudentAddressId(10L)).thenReturn(address);
-        Mockito.when(iStuRepository.setStudentUniversityAndAddressIdNull(anyLong())).thenReturn(new Student());
-        doNothing().when(iStuRepository).delete(anyLong());
-        doNothing().when(iAddRepository).delete(20L);
-        studentService.delete(10L);
-        verify(iStuRepository).setStudentUniversityAndAddressIdNull(10L);
-        verify(iStuRepository).get(10L);
-        verify(iAddRepository).delete(20L);
+        Mockito.when(studentRepo.findById(anyLong())).thenReturn(Optional.of(student));
+        doNothing().when(studentRepo).deleteById(anyLong());
+        studentService.delete(32L);
+        verify(studentRepo, times(1)).findById(32L);
+        verify(studentRepo, times(1)).deleteById(32L);
     }
 
     @Test
@@ -186,8 +183,7 @@ class StudentServiceTest {
                 new Student(),
                 new Student()
         );
-        Mockito.when(iStuRepository.getAll()).thenReturn(studentList);
-        Mockito.when(iAddRepository.get(anyLong())).thenReturn(new Address());
+        Mockito.when(studentRepo.findAll()).thenReturn(studentList);
         List<Student> getAllStudent = studentService.getAll();
         assertNotNull(getAllStudent);
         assertEquals(3, getAllStudent.size());
@@ -195,7 +191,7 @@ class StudentServiceTest {
 
     @Test
     void getAllEmpty() {
-        Mockito.when(iStuRepository.getAll()).thenReturn(new ArrayList<Student>());
+        Mockito.when(studentRepo.findAll()).thenReturn(new ArrayList<Student>());
         List<Student> getAllStudent = studentService.getAll();
         assertNotNull(getAllStudent);
         assertEquals(0, getAllStudent.size());
@@ -208,7 +204,7 @@ class StudentServiceTest {
                 new Student(),
                 new Student()
         );
-        Mockito.when(iStuRepository.getAllStudentByUniversityId(anyLong())).thenReturn(students);
+        Mockito.when(studentRepo.findAllByUniversityId(anyLong())).thenReturn(students);
         List<Student> studentList = studentService.getAllStudentByUniversityId(13L);
         assertNotNull(studentList);
         assertEquals(3, studentList.size());
@@ -216,67 +212,9 @@ class StudentServiceTest {
 
     @Test
     void getAllStudentByUniversityIdEmpty() {
-
-        Mockito.when(iStuRepository.getAllStudentByUniversityId(anyLong())).thenReturn(new ArrayList<Student>());
+        Mockito.when(studentRepo.findAllByUniversityId(anyLong())).thenReturn(new ArrayList<Student>());
         List<Student> studentList = studentService.getAllStudentByUniversityId(13L);
         assertNotNull(studentList);
         assertEquals(0, studentList.size());
-    }
-
-    @Test
-    void setStudentUniversityAndAddressIdNull() {
-        Address address = new Address("Alwad7209", "AmericanSt60", 60);
-        address.setId(1L);
-        Student student = new Student("Tasneem", address,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
-        student.setId(10L);
-        Student studentAfterSetNull = new Student("Tasneem", address,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
-        studentAfterSetNull.setId(null);
-        studentAfterSetNull.setAddress(null);
-        Mockito.when(iStuRepository.get(anyLong())).thenReturn(student);
-        Mockito.when(iStuRepository.setStudentUniversityAndAddressIdNull(anyLong())).thenReturn(studentAfterSetNull);
-        Student student1 = studentService.setStudentUniversityAndAddressIdNull(13L);
-        assertNotNull(student1);
-        assertEquals(null, student1.getId());
-        assertEquals(null, student1.getAddress());
-    }
-
-    @Test
-    void setStudentUniversityAndAddressIdNullThrowResourceStudentIsNotFound() {
-        ResourceStudentIsNotFoundException studentIsNotFoundException =
-                assertThrowsExactly(ResourceStudentIsNotFoundException.class, () ->
-                        studentService.setStudentUniversityAndAddressIdNull(55L));
-        assertEquals("student with id=55 does not found",
-                studentIsNotFoundException.getMessage());
-    }
-
-    @Test
-    void setStudentAddressId() {
-        Address address = new Address("Alwad7209", "AmericanSt60", 60);
-        address.setId(1L);
-        Student student = new Student("Tasneem", address,
-                Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
-                Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
-                "MTasneem@gmail.com");
-        student.setId(12L);
-        Mockito.when(iStuRepository.get(anyLong())).thenReturn(student);
-        Mockito.when(iStuRepository.setStudentAddressId(anyLong(), anyLong())).thenReturn(student);
-        Student student1 = studentService.setStudentAddressId(12L, 1L);
-        assertEquals(12L, student1.getId());
-        assertEquals(1L, student1.getAddress().getId());
-    }
-
-    @Test
-    void setStudentAddressIdTrowExceptionResourceStudentNotFound() {
-        ResourceStudentIsNotFoundException studentIsNotFoundException =
-                assertThrowsExactly(ResourceStudentIsNotFoundException.class, () ->
-                        studentService.setStudentAddressId(40L, 4L));
-        assertEquals("student with id=40 does not found",
-                studentIsNotFoundException.getMessage());
     }
 }

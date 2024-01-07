@@ -16,8 +16,4 @@ public interface IStudentService {
     List<Student> getAll();
 
     List<Student> getAllStudentByUniversityId(Long id);
-
-    Student setStudentUniversityAndAddressIdNull(Long studentId);
-
-    Student setStudentAddressId(Long studentId, Long addressId);
 }

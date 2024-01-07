@@ -1,32 +1,32 @@
-//package com.example.alaa.university.appevents;
-//
-//import com.example.alaa.university.domain.*;
-//import com.example.alaa.university.repository.IAddressRepository;
-//import com.example.alaa.university.repository.IStudentRepository;
-//import com.example.alaa.university.repository.IUniversityRepository;
-//import org.springframework.boot.context.event.ApplicationReadyEvent;
-//import org.springframework.context.event.EventListener;
-//import org.springframework.stereotype.Component;
-//
-//import java.time.Instant;
-//import java.util.List;
-//
-//@Component
-//public class RepositoryExample {
-//    private IStudentRepository iStudentRepository;
-//    private IAddressRepository iAddressRepository;
-//    private IUniversityRepository iUniversityRepository;
-//
-//    public RepositoryExample(IStudentRepository iStudentRepository, IAddressRepository iAddressRepository
-//            , IUniversityRepository iUniversityRepository) {
-//        this.iStudentRepository = iStudentRepository;
-//        this.iAddressRepository = iAddressRepository;
-//        this.iUniversityRepository = iUniversityRepository;
-//    }
-//
-//    @EventListener(ApplicationReadyEvent.class)
-//    public void studentRepositoryPlayGround() {
-//        //I want to get student id=12 from dataBase
+package com.example.alaa.university.appevents;
+
+import com.example.alaa.university.domain.*;
+import com.example.alaa.university.repository.IAddressRepository;
+import com.example.alaa.university.repository.IStudentRepository;
+import com.example.alaa.university.repository.IUniversityRepository;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.List;
+
+@Component
+public class RepositoryExample {
+    private IStudentRepository iStudentRepository;
+    private IAddressRepository iAddressRepository;
+    private IUniversityRepository iUniversityRepository;
+
+    public RepositoryExample(IStudentRepository iStudentRepository, IAddressRepository iAddressRepository
+            , IUniversityRepository iUniversityRepository) {
+        this.iStudentRepository = iStudentRepository;
+        this.iAddressRepository = iAddressRepository;
+        this.iUniversityRepository = iUniversityRepository;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void studentRepositoryPlayGround() {
+        //I want to get student id=12 from dataBase
 //        System.out.println("I want to get student id=8 from dataBase");
 //        Student student = iStudentRepository.get(8L);
 //        System.out.println(student.toString());
@@ -37,8 +37,10 @@
 //        System.out.println(iUniversityRepository.get(1L));
 //        System.out.println("I want to get university does not exist");
 //        System.out.println(iUniversityRepository.get(8L));
-//        //I want to add a new student
-//        Address address = iAddressRepository.add(new Address("RamallaNew", "Ramala St", 13));
+        //I want to add a new student
+        Address address =new Address("RamallaNew", "Ramala St", 13);
+                ;
+//System.out.println(iAddressRepository.add(address));
 //        University university3 = new University("Bier Ziet new University",
 //                address, UniversityType.GOVERMENTAL,
 //                "Bier Ziet@gmail.com", 4000d, null);
@@ -79,5 +81,5 @@
 //        //iUniversityRepository.delete(117L);
 //        iStudentRepository.delete(20L);
 //        iAddressRepository.delete(32L);
-//    }
-//}
+    }
+}

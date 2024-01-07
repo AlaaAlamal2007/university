@@ -17,6 +17,7 @@ public class UniversityController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public University get(@PathVariable Long id) {
         return iUniversityServiceC.get(id);
     }
@@ -26,6 +27,7 @@ public class UniversityController {
     public University add(@RequestBody University university) {
         return iUniversityServiceC.add(university);
     }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public University update(@PathVariable Long id, @RequestBody University updatedUniversity) {
@@ -35,12 +37,6 @@ public class UniversityController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         iUniversityServiceC.delete(id);
-
-    }
-
-    @GetMapping("students/{studentId}")
-    public University getStudentUniversityId(@PathVariable Long studentId) {
-        return iUniversityServiceC.getStudentUniversityId(studentId);
     }
 
     @GetMapping
