@@ -3,7 +3,6 @@ package com.example.alaa.university.controller;
 import com.example.alaa.university.domain.Subject;
 import com.example.alaa.university.domain.Teacher;
 import com.example.alaa.university.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @RequestMapping("/api/teachers")
 @RestController
 public class TeacherController {
-    @Autowired
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
+
+    public TeacherController(TeacherService teacherService) {
+        this.teacherService = teacherService;
+    }
 
     @PostMapping
     public Teacher createTeacher(@RequestBody Teacher teacher) {
@@ -34,9 +36,10 @@ public class TeacherController {
         return teacherService.getAllTeachers();
     }
 
-    @PutMapping("/{teacherId}")
-    public Teacher updateTeacher(@PathVariable Long teacherId) {
-        return null;
+    @PutMapping("/updateTeacherName/{teacherId}/{name}")
+    public String updateTeacherInfo(@PathVariable Long teacherId,
+                                    @PathVariable String name) {
+        return teacherService.updateTeacherJustInformation(teacherId, name) + "updated";
     }
 
     @DeleteMapping("/{teacherId}")
@@ -45,7 +48,14 @@ public class TeacherController {
     }
 
     @PutMapping("/update/{teacherId}")
-    public Teacher updateTeacher(@PathVariable Long teacherId, @RequestBody Teacher updatedTeacher) {
+    public Teacher updateTeacher(@PathVariable Long teacherId,
+                                 @RequestBody Teacher updatedTeacher) {
         return teacherService.updateTeacher(teacherId, updatedTeacher);
     }
+
+    @GetMapping("/subjectId/{subjectId}")
+    public @ResponseBody List<Teacher> getAllTeacherBySubjectId(@PathVariable("subjectId") Long subjectId) {
+        return teacherService.getAllTeacherBySubjectId(subjectId);
+    }
 }
+

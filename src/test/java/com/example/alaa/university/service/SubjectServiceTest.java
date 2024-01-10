@@ -97,43 +97,6 @@ class SubjectServiceTest {
     }
 
     @Test
-    void getAllSubjects() {
-        List<Subject> subjects = Arrays.asList(
-                new Subject(),
-                new Subject()
-        );
-        Mockito.when(subjectRepo.findAll()).thenReturn(subjects);
-        List<Subject> getAllSubjects = subjectService.getAllSubjects();
-        assertNotNull(getAllSubjects);
-        assertEquals(2, getAllSubjects.size());
-    }
-
-    @Test
-    void getAllSubjectsEmpty() {
-        List<Subject> subjects = Arrays.asList();
-        Mockito.when(subjectRepo.findAll()).thenReturn(subjects);
-        List<Subject> getAllSubjects = subjectService.getAllSubjects();
-        assertNotNull(getAllSubjects);
-        assertEquals(0, getAllSubjects.size());
-    }
-
-    @Test
-    void getAllTeacherBySubjectIdSuccess() {
-        Subject subject = new Subject();
-        subject.setId(23L);
-        List<Teacher> teachers = Arrays.asList(
-                new Teacher(),
-                new Teacher(),
-                new Teacher()
-        );
-        Mockito.when(subjectRepo.findById(anyLong())).thenReturn(Optional.of(subject));
-        Mockito.when(teacherRepo.findTeachersBySubjectsId(anyLong())).thenReturn(teachers);
-        List<Teacher> getAllTeachersSubject = subjectService.getAllTeacherBySubjectId(23L);
-        assertNotNull(getAllTeachersSubject);
-        assertEquals(3, getAllTeachersSubject.size());
-    }
-
-    @Test
     void deleteSubjectWithoutTeacher() {
         Subject subject = new Subject();
         subject.setId(12L);
@@ -206,5 +169,26 @@ class SubjectServiceTest {
         Subject updatedSubject = subjectService.updateSubject(12L, newSubject);
         assertEquals(2, updatedSubject.getTeachers().size());
         assertEquals(13L, updatedSubject.getId());
+    }
+
+    @Test
+    void getAllSubjectsEmpty() {
+        List<Subject> subjects = Arrays.asList();
+        Mockito.when(subjectRepo.findAll()).thenReturn(subjects);
+        List<Subject> getAllSubjects = subjectService.getAllSubjects();
+        assertNotNull(getAllSubjects);
+        assertEquals(0, getAllSubjects.size());
+    }
+
+    @Test
+    void getAllSubjects() {
+        List<Subject> subjects = Arrays.asList(
+                new Subject(),
+                new Subject()
+        );
+        Mockito.when(subjectRepo.findAll()).thenReturn(subjects);
+        List<Subject> getAllSubjects = subjectService.getAllSubjects();
+        assertNotNull(getAllSubjects);
+        assertEquals(2, getAllSubjects.size());
     }
 }

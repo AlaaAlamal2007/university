@@ -158,4 +158,30 @@ class TeacherServiceTest {
         assertNotNull(updatedTeacher);
         assertEquals(47L, updatedTeacher.getId());
     }
+
+    @Test
+    void getAllTeacherBySubjectIdSuccess() {
+        Subject subject = new Subject();
+        subject.setId(23L);
+        List<Teacher> teachers = Arrays.asList(
+                new Teacher(),
+                new Teacher(),
+                new Teacher()
+        );
+        Mockito.when(subjectRepo.findById(anyLong())).thenReturn(Optional.of(subject));
+        Mockito.when(teacherRepo.findTeachersBySubjectsId(anyLong())).thenReturn(teachers);
+        List<Teacher> getAllTeachersSubject = teacherService.getAllTeacherBySubjectId(23L);
+        assertNotNull(getAllTeachersSubject);
+        assertEquals(3, getAllTeachersSubject.size());
+    }
+    @Test
+    void updateTeacherJustInformation(){
+        Teacher teacher=new Teacher();
+        teacher.setId(12L);
+        teacher.setName("Muna");
+        Mockito.when(teacherRepo.findById(12L)).thenReturn(Optional.of(teacher));
+        Mockito.when(teacherRepo.updateTeacherName(12L,"Amjad")).thenReturn(1);
+        int n=teacherService.updateTeacherJustInformation(12L,"Amjad");
+        assertEquals(1,n);
+    }
 }

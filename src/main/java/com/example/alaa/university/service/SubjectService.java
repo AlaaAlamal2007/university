@@ -6,7 +6,7 @@ import com.example.alaa.university.exceptions.ResourceSubjectIsNotFoundException
 import com.example.alaa.university.exceptions.ResourceTeacherIsNotFoundException;
 import com.example.alaa.university.repository.SubjectRepo;
 import com.example.alaa.university.repository.TeacherRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +14,14 @@ import java.util.Set;
 
 @Service
 public class SubjectService {
-    @Autowired
-    private SubjectRepo subjectRepository;
-    @Autowired
-    private TeacherRepo teacherRepo;
+    private final SubjectRepo subjectRepository;
+    private final TeacherRepo teacherRepo;
+
+    public SubjectService(SubjectRepo subjectRepository,
+                          TeacherRepo teacherRepo) {
+        this.subjectRepository = subjectRepository;
+        this.teacherRepo = teacherRepo;
+    }
 
     public Subject createSubject(Subject subject) {
         return subjectRepository.save(subject);
@@ -26,8 +30,8 @@ public class SubjectService {
     public Subject getSubject(Long subjectId) {
         return subjectRepository.findById(subjectId)
                 .orElseThrow(
-                () -> new ResourceSubjectIsNotFoundException("Subject does not found id=" + subjectId)
-        );
+                        () -> new ResourceSubjectIsNotFoundException("Subject does not found id=" + subjectId)
+                );
     }
 
     public Subject assignTeacherToSubject(Long subjectId, Long teacherId) {
@@ -52,18 +56,9 @@ public class SubjectService {
         teacherRepo.save(teacher);
     }
 
-    public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
-    }
 
-    public List<Teacher> getAllTeacherBySubjectId(Long subjectId) {
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(
-                        () -> new ResourceSubjectIsNotFoundException("Subject does not found id=" + subjectId)
-                );
-        List<Teacher> teachers = teacherRepo.findTeachersBySubjectsId(subjectId);
-        return teachers;
-    }
+
+
 
     public void deleteSubject(Long subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
@@ -84,14 +79,18 @@ public class SubjectService {
                 .orElseThrow(
                         () -> new ResourceSubjectIsNotFoundException("Subject does not found id=" + subjectId)
                 );
-        List<Teacher> teachers=teacherRepo.findTeachersBySubjectsId(subjectId);
+        List<Teacher> teachers = teacherRepo.findTeachersBySubjectsId(subjectId);
         deleteSubject(subjectId);
         Subject savedSubject = createSubject(updatedSubject);
         if (teachers != null && !teachers.isEmpty()) {
             teachers.forEach(teacher ->
-                    assignTeacherToSubject(savedSubject.getId(),teacher.getId()));
+                    assignTeacherToSubject(savedSubject.getId(), teacher.getId()));
         }
 
         return savedSubject;
+    }
+
+    public List<Subject> getAllSubjects() {
+      return  subjectRepository.findAll();
     }
 }
