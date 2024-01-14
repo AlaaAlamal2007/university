@@ -1,9 +1,19 @@
 package com.example.alaa.university.domain;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="addresses")
 public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name="city_name")
     private String cityName;
+    @Column(name="street_name")
     private String streetName;
+    @Column(name="street_number")
     private Integer streetNumber;
 
     public Address(String cityName, String streetName, Integer streetNumber) {

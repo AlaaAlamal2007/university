@@ -3,7 +3,7 @@ package com.example.alaa.university.service;
 import com.example.alaa.university.domain.Address;
 import com.example.alaa.university.exceptions.ArgumentAddressException;
 import com.example.alaa.university.exceptions.ResourceAddressIsNotFoundException;
-import com.example.alaa.university.repository.IAddressRepository;
+import com.example.alaa.university.repository.AddressRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +15,7 @@ import org.mockito.invocation.InvocationOnMock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -24,7 +25,7 @@ class AddressServiceTest {
     @InjectMocks
     private AddressService addressServiceTest;
     @Mock
-    private IAddressRepository iAddRepositoryTest;
+    private AddressRepo addressRepo;
 
     @BeforeEach
     void setUp() {
@@ -33,9 +34,12 @@ class AddressServiceTest {
 
     @Test
     void getExistAddress() {
-        when(iAddRepositoryTest.get(55L)).thenReturn(new Address());
-        Address address = addressServiceTest.get(55L);
+        Address address = new Address();
+        address.setId(55L);
+        when(addressRepo.findById(55L)).thenReturn(Optional.of(address));
+        Address getAddress = addressServiceTest.get(55L);
         assertNotNull(address);
+        assertEquals(55L, getAddress.getId());
     }
 
     @Test
@@ -49,7 +53,7 @@ class AddressServiceTest {
     @Test
     void addSuccess() {
         Address address = new Address("Tamra", "Amru street", 10);
-        when(iAddRepositoryTest.add(any())).thenAnswer((InvocationOnMock invocation) -> {
+        when(addressRepo.save(any())).thenAnswer((InvocationOnMock invocation) -> {
             Object firstArgument = invocation.getArgument(0);
             Address addressArg = (Address) firstArgument;
             addressArg.setId(4555L);
@@ -83,10 +87,10 @@ class AddressServiceTest {
     void delete() {
         Address address = new Address("Tmra", "a street", 5);
         address.setId(10L);
-        when(iAddRepositoryTest.get(anyLong())).thenReturn(address);
-        doNothing().when(iAddRepositoryTest).delete(anyLong());
+        when(addressRepo.findById(anyLong())).thenReturn(Optional.of(address));
+        doNothing().when(addressRepo).deleteById(10L);
         addressServiceTest.delete(10L);
-        verify(iAddRepositoryTest, times(1)).delete(10L);
+        verify(addressRepo, times(1)).deleteById(10L);
     }
 
     @Test
@@ -99,7 +103,7 @@ class AddressServiceTest {
 
     @Test
     void getAllSuccess() {
-        Mockito.when(iAddRepositoryTest.getAll()).thenReturn(Arrays.asList(
+        Mockito.when(addressRepo.findAll()).thenReturn(Arrays.asList(
                 new Address(), new Address(), new Address()
         ));
         List<Address> addressArrayList = addressServiceTest.getAll();
@@ -109,61 +113,24 @@ class AddressServiceTest {
 
     @Test
     void getAllEmpty() {
-        Mockito.when(iAddRepositoryTest.getAll()).thenReturn(new ArrayList<>());
+        Mockito.when(addressRepo.findAll()).thenReturn(new ArrayList<>());
         List<Address> addressArrayList = addressServiceTest.getAll();
         assertNotNull(addressArrayList);
         assertEquals(0, addressArrayList.size());
     }
 
     @Test
-    void getStudentAddressIdSuccess() {
-        Mockito.when(iAddRepositoryTest.getStudentAddressId(anyLong())).thenReturn(new Address());
-        Address address = addressServiceTest.getStudentAddressId(40L);
-        assertNotNull(address);
-        verify(iAddRepositoryTest).getStudentAddressId(40L);
-    }
-
-    @Test
-    void getStudentAddressIdFailure() {
-        when(iAddRepositoryTest.getStudentAddressId(anyLong())).thenReturn(null);
-        ResourceAddressIsNotFoundException addressIsNotFoundException =
-                assertThrowsExactly(ResourceAddressIsNotFoundException.class, () -> {
-                    addressServiceTest.getStudentAddressId(60L);
-                });
-        assertEquals("student with id=60 does not have address", addressIsNotFoundException.getMessage());
-    }
-
-    @Test
-    void getUniversityAddressIdSuccess() {
-        when(iAddRepositoryTest.getUniversityAddressId(anyLong())).thenReturn(new Address());
-        Address address = addressServiceTest.getUniversityAddressId(47L);
-        assertNotNull(address);
-        verify(iAddRepositoryTest).getUniversityAddressId(47L);
-    }
-
-    @Test
-    void getUniversityAddressIdFailure() {
-        when(iAddRepositoryTest.getUniversityAddressId(anyLong())).thenReturn(null);
-        ResourceAddressIsNotFoundException addressIsNotFoundExceptionU =
-                assertThrowsExactly(ResourceAddressIsNotFoundException.class, () -> {
-                    addressServiceTest.getUniversityAddressId(50L);
-                });
-        assertEquals("University with id=50 does not have address", addressIsNotFoundExceptionU.getMessage());
-    }
-
-    @Test
-    void updateSuccess(){
-        Address address=new Address("ASD","ASF ST",9);
-        address.setId(10L);
-        Address oldAddress=new Address("ASDE","aer st",2);
-        oldAddress.setId(11L);
-        Mockito.when(iAddRepositoryTest.get(anyLong())).thenReturn(oldAddress);
-        doNothing().when(iAddRepositoryTest).delete(anyLong());
-        Mockito.when(addressServiceTest.add(address)).thenReturn(address);
-        Mockito.when(iAddRepositoryTest.add(any())).thenReturn(address);
-        Mockito.when(addressServiceTest.get(anyLong())).thenReturn(address);
-        Address updatedAddress=addressServiceTest.update(11L,oldAddress);
-        assertEquals(10L,updatedAddress.getId());
+    void updateAddress() {
+        Address oldAddress = new Address();
+        oldAddress.setId(13L);
+        Address newAddress = new Address();
+        newAddress.setId(40L);
+        Mockito.when(addressRepo.findById(anyLong())).thenReturn(Optional.of(oldAddress));
+        doNothing().when(addressRepo).deleteById(40L);
+        Mockito.when(addressRepo.save(any())).thenReturn(newAddress);
+        Address updatedAddress = addressServiceTest.update(13L, newAddress);
         assertNotNull(updatedAddress);
+        assertEquals(40L, updatedAddress.getId());
     }
 }
+

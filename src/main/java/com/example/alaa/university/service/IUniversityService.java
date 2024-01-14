@@ -13,9 +13,5 @@ public interface IUniversityService {
 
     void delete(Long id);
 
-    University setUniversityAddressIdNull(Long universityId);
-
-    University getStudentUniversityId(Long studentId);
-
     List<University> getAll();
 }

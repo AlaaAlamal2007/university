@@ -48,3 +48,4 @@ public class StudentController {
         return iStudentServiceC.getAllStudentByUniversityId(id);
     }
 }
+

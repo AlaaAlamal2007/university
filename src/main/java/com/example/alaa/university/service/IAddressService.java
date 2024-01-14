@@ -14,8 +14,4 @@ public interface IAddressService {
     List<Address> getAll();
 
     Address update(Long id, Address updatedAddress);
-
-    Address getStudentAddressId(Long studentId);
-
-    Address getUniversityAddressId(Long universityId);
 }

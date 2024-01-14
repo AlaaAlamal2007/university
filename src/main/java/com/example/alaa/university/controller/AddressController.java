@@ -40,18 +40,9 @@ public class AddressController {
         return iAddressServiceC.update(id, updatedAddress);
     }
 
-    @GetMapping("/students/{studentId}")
-    Address getStudentAddressId(@PathVariable Long studentId) {
-        return iAddressServiceC.getStudentAddressId(studentId);
-    }
-
-    @GetMapping("/universities/{universityId}")
-    Address getUniversityAddressId(@PathVariable Long universityId) {
-        return iAddressServiceC.getUniversityAddressId(universityId);
-    }
-
     @GetMapping
     List<Address> getAll() {
         return iAddressServiceC.getAll();
     }
 }
+
