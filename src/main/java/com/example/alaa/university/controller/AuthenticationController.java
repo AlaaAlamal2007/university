@@ -6,13 +6,13 @@ import com.example.alaa.university.dto.RefreshTokenRequest;
 import com.example.alaa.university.dto.SignInRequest;
 import com.example.alaa.university.dto.SignUpRequest;
 import com.example.alaa.university.service.IAuthenticationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final IAuthenticationService iAuthenticationService;
-
     public AuthenticationController(IAuthenticationService iAuthenticationService) {
         this.iAuthenticationService = iAuthenticationService;
     }
@@ -23,8 +23,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
+   @ResponseStatus(HttpStatus.FORBIDDEN)
     public @ResponseBody JwtAuthenticationResponse signIn(@RequestBody SignInRequest signRequest) {
-        return iAuthenticationService.signIn(signRequest);
+            return iAuthenticationService.signIn(signRequest);
     }
 
     @PostMapping("/refresh")
@@ -32,5 +33,6 @@ public class AuthenticationController {
         return iAuthenticationService.refreshToken(refreshTokenRequest);
     }
 }
+
 
 

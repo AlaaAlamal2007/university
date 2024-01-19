@@ -7,10 +7,11 @@ import com.example.alaa.university.dto.SignInRequest;
 import com.example.alaa.university.dto.SignUpRequest;
 
 public interface IAuthenticationService {
-    public ApplicationUser signUp(SignUpRequest signUpRequest);
+    ApplicationUser signUp(SignUpRequest signUpRequest);
 
     JwtAuthenticationResponse signIn(SignInRequest signInRequest);
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 }
+
 
