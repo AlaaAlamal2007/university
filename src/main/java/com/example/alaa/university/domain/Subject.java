@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "subjects")
-public class Subject {
+public class Subject extends AbstractAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -76,3 +76,4 @@ public class Subject {
                 '}';
     }
 }
+

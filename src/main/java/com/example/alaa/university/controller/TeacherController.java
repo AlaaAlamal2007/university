@@ -37,9 +37,9 @@ public class TeacherController {
     }
 
     @PutMapping("/updateTeacherName/{teacherId}/{name}")
-    public String updateTeacherInfo(@PathVariable Long teacherId,
+    public Teacher updateTeacherInfo(@PathVariable Long teacherId,
                                     @PathVariable String name) {
-        return teacherService.updateTeacherJustInformation(teacherId, name) + "updated";
+        return teacherService.updateTeacherJustInformation(teacherId, name);
     }
 
     @DeleteMapping("/{teacherId}")
@@ -58,4 +58,5 @@ public class TeacherController {
         return teacherService.getAllTeacherBySubjectId(subjectId);
     }
 }
+
 

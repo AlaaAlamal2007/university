@@ -31,8 +31,6 @@ class StudentServiceTest {
     private StudentService studentService;
     @Mock
     private StudentRepo studentRepo;
-    @Mock
-    private UniversityRepo universityRepo;
 
     @BeforeEach
     void setUp() {
@@ -140,17 +138,14 @@ class StudentServiceTest {
                 Gender.MALE, false, Instant.parse("1984-02-03T11:25:30.00Z"),
                 Instant.parse("2017-02-03T11:25:30.00Z"), Instant.parse("2023-02-03T11:25:30.00Z"), 2000d,
                 "MTasneem@gmail.com", 10L);
-        newStudent.setId(20L);
+        newStudent.setId(10L);
         University university = new University();
         university.setId(3L);
         Mockito.when(studentRepo.findById(anyLong())).thenReturn(Optional.of(oldStudent));
-        doNothing().when(studentRepo).deleteById(anyLong());
-        Mockito.when(studentService.add(newStudent, 3L)).thenReturn(newStudent);
-        Mockito.when(studentRepo.save(any())).thenReturn(newStudent);
+        Mockito.when(studentRepo.saveAndFlush(any())).thenReturn(newStudent);
         Student updatedStudent = studentService.update(10L, newStudent);
         assertNotNull(updatedStudent);
-        assertEquals(20L, updatedStudent.getId());
-        verify(studentRepo).deleteById(10l);
+        assertEquals(10L, updatedStudent.getId());
     }
 
     @Test
@@ -218,4 +213,5 @@ class StudentServiceTest {
         assertEquals(0, studentList.size());
     }
 }
+
 

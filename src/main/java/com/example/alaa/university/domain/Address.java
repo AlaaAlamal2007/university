@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="addresses")
-public class Address {
+public class Address extends AbstractAuditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -67,3 +67,4 @@ public class Address {
                 '}';
     }
 }
+

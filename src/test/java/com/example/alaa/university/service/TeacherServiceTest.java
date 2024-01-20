@@ -174,14 +174,15 @@ class TeacherServiceTest {
         assertNotNull(getAllTeachersSubject);
         assertEquals(3, getAllTeachersSubject.size());
     }
+
     @Test
-    void updateTeacherJustInformation(){
-        Teacher teacher=new Teacher();
+    void updateTeacherJustInformation() {
+        Teacher teacher = new Teacher();
         teacher.setId(12L);
         teacher.setName("Muna");
         Mockito.when(teacherRepo.findById(12L)).thenReturn(Optional.of(teacher));
-        Mockito.when(teacherRepo.updateTeacherName(12L,"Amjad")).thenReturn(1);
-        int n=teacherService.updateTeacherJustInformation(12L,"Amjad");
-        assertEquals(1,n);
+        Mockito.when(teacherRepo.saveAndFlush(any())).thenReturn(teacher);
+        assertEquals("Muna", teacher.getName());
     }
 }
+

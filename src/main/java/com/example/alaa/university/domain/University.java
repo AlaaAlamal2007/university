@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "universities")
-public class University {
+public class University extends AbstractAuditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -120,3 +120,4 @@ public class University {
                 '}';
     }
 }
+

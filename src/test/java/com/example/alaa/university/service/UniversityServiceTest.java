@@ -198,15 +198,15 @@ class UniversityServiceTest {
         University newUniversity = new University("Alblqa", newAddress,
                 UniversityType.GOVERMENTAL, "Alblqa@gmail.com", 5000d,
                 Instant.parse("2017-02-03T11:25:30.00Z"), Arrays.asList(new Student(), new Student()));
-        newUniversity.setId(12L);
+        newUniversity.setId(10L);
         newUniversity.setAddress(newAddress);
         Mockito.when(universityRepo.findById(10L)).thenReturn(Optional.of(oldUniversity));
-        Mockito.when(universityRepo.save(any())).thenReturn(newUniversity);
-        doNothing().when(universityRepo).deleteById(10L);
+        Mockito.when(universityRepo.saveAndFlush(any())).thenReturn(newUniversity);
+        doNothing().when(studentRepo).deleteAllStudentByUniversityId(10L);
         University updatedUniversity = universityService.update(10L, newUniversity);
         assertNotNull(updatedUniversity);
-        assertEquals(12L, updatedUniversity.getId());
-        verify(universityRepo).deleteById(10L);
+        assertEquals(10L, updatedUniversity.getId());
+        verify(studentRepo, never()).deleteById(10L);
         verify(iStudService, times(2)).add(any(), anyLong());
     }
 

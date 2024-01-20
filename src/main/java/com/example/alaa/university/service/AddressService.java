@@ -59,8 +59,10 @@ public class AddressService implements IAddressService {
                 () -> new ResourceAddressIsNotFoundException(
                         "address with id=" + id + " is does not found")
         );
-        addressRepo.deleteById(id);
-        Address newAddress = addressRepo.save(updatedAddress);
-        return newAddress;
+        address.setStreetName(updatedAddress.getStreetName());
+        address.setStreetNumber(updatedAddress.getStreetNumber());
+        address.setStreetName(updatedAddress.getCityName());
+        return addressRepo.saveAndFlush(address);
     }
 }
+
