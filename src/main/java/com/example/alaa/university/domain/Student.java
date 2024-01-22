@@ -6,7 +6,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "students")
-public class Student {
+public class Student extends AbstractAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -157,3 +157,4 @@ public class Student {
                 '}';
     }
 }
+

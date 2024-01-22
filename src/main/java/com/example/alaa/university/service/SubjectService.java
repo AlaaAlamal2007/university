@@ -56,10 +56,6 @@ public class SubjectService {
         teacherRepo.save(teacher);
     }
 
-
-
-
-
     public void deleteSubject(Long subjectId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(
@@ -79,18 +75,13 @@ public class SubjectService {
                 .orElseThrow(
                         () -> new ResourceSubjectIsNotFoundException("Subject does not found id=" + subjectId)
                 );
-        List<Teacher> teachers = teacherRepo.findTeachersBySubjectsId(subjectId);
-        deleteSubject(subjectId);
-        Subject savedSubject = createSubject(updatedSubject);
-        if (teachers != null && !teachers.isEmpty()) {
-            teachers.forEach(teacher ->
-                    assignTeacherToSubject(savedSubject.getId(), teacher.getId()));
-        }
-
-        return savedSubject;
+        subject.setName(updatedSubject.getName());
+        subject.setMarksObtained(updatedSubject.getMarksObtained());
+        return subjectRepository.saveAndFlush(subject);
     }
 
     public List<Subject> getAllSubjects() {
-      return  subjectRepository.findAll();
+        return subjectRepository.findAll();
     }
 }
+

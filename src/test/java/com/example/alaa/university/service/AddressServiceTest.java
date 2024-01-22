@@ -124,13 +124,14 @@ class AddressServiceTest {
         Address oldAddress = new Address();
         oldAddress.setId(13L);
         Address newAddress = new Address();
-        newAddress.setId(40L);
+        newAddress.setId(13L);
         Mockito.when(addressRepo.findById(anyLong())).thenReturn(Optional.of(oldAddress));
-        doNothing().when(addressRepo).deleteById(40L);
-        Mockito.when(addressRepo.save(any())).thenReturn(newAddress);
+        Mockito.when(addressRepo.saveAndFlush(any())).thenReturn(newAddress);
         Address updatedAddress = addressServiceTest.update(13L, newAddress);
         assertNotNull(updatedAddress);
-        assertEquals(40L, updatedAddress.getId());
+        assertEquals(13L, updatedAddress.getId());
     }
 }
+
+
 

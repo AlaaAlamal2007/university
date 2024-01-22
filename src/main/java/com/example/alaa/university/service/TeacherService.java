@@ -65,8 +65,8 @@ public class TeacherService {
         Teacher teacher = teacherRepo.findById(teacherId)
                 .orElseThrow(() -> new ResourceTeacherIsNotFoundException("" +
                         "teacher does not found id=" + teacherId));
-        Teacher savedTeacher = createTeacher(updatedTeacher);
-        return teacherRepo.save(savedTeacher);
+      teacher.setName(updatedTeacher.getName());
+        return teacherRepo.saveAndFlush(teacher);
     }
 
     public List<Teacher> getAllTeacherBySubjectId(Long subjectId) {
@@ -78,11 +78,14 @@ public class TeacherService {
         return teachers;
     }
 
-    public Integer updateTeacherJustInformation(Long teacherId,String name) {
+    public Teacher updateTeacherJustInformation(Long teacherId,String name) {
         Teacher teacher=teacherRepo.findById(teacherId)
                 .orElseThrow(() -> new ResourceTeacherIsNotFoundException("" +
                         "teacher does not found id=" + teacherId));
-        return teacherRepo.updateTeacherName(teacherId,name);
+        teacher.setName(name);
+        return teacherRepo.saveAndFlush(teacher);
     }
 }
+
+
 

@@ -135,40 +135,21 @@ class SubjectServiceTest {
     @Test
     void updateSubject() {
         Subject subject = new Subject();
-        Set<Teacher> teachers = new HashSet<>();
-        Teacher teacher1 = new Teacher();
-        teacher1.setId(1L);
-        teacher1.setSubjects(new HashSet<>());
-        teachers.add(teacher1);
-        Teacher teacher2 = new Teacher();
-        teacher2.setId(2L);
-        teachers.add(teacher2);
-        teacher2.setSubjects(new HashSet<>());
+        subject.setName("Math");
+        subject.setMarksObtained(40d);
         subject.setId(12L);
-        subject.setTeachers(teachers);
+        subject.setTeachers(new HashSet<>());
         Subject newSubject = new Subject();
-        newSubject.setId(13L);
         newSubject.setName("history");
+        newSubject.setId(12L);
         newSubject.setTeachers(new HashSet<>());
-        List<Teacher> teacherList = Arrays.asList(teacher1, teacher2);
+        newSubject.setMarksObtained(70d);
         Mockito.when(subjectRepo.findById(12L)).thenReturn(Optional.of(subject));
-        Mockito.when(teacherRepo.findTeachersBySubjectsId(12L)).thenReturn(teacherList);
-        Mockito.when(subjectRepo.findById(12L)).thenReturn(Optional.of(subject));
-        Mockito.when(teacherRepo.findById(1L)).thenReturn(Optional.of(teacher1));
-        Mockito.when(teacherRepo.save(teacher1)).thenReturn(teacher1);
-        Mockito.when(subjectRepo.findById(12L)).thenReturn(Optional.of(subject));
-        Mockito.when(teacherRepo.findById(2L)).thenReturn(Optional.of(teacher2));
-        Mockito.when(teacherRepo.save(teacher2)).thenReturn(teacher2);
-        doNothing().when(subjectRepo).deleteById(12L);
-        Mockito.when(subjectRepo.findById(13L)).thenReturn(Optional.of(newSubject));
-        Mockito.when(teacherRepo.findById(1L)).thenReturn(Optional.of(teacher1));
-        Mockito.when(subjectRepo.save(newSubject)).thenReturn(newSubject);
-        Mockito.when(subjectRepo.findById(13L)).thenReturn(Optional.of(newSubject));
-        Mockito.when(teacherRepo.findById(2L)).thenReturn(Optional.of(teacher2));
-        Mockito.when(subjectRepo.save(newSubject)).thenReturn(newSubject);
+        Mockito.when(subjectRepo.saveAndFlush(any())).thenReturn(newSubject);
         Subject updatedSubject = subjectService.updateSubject(12L, newSubject);
-        assertEquals(2, updatedSubject.getTeachers().size());
-        assertEquals(13L, updatedSubject.getId());
+        assertNotNull(updatedSubject);
+        assertEquals("history", updatedSubject.getName());
+        assertEquals(12L, updatedSubject.getId());
     }
 
     @Test
@@ -192,3 +173,4 @@ class SubjectServiceTest {
         assertEquals(2, getAllSubjects.size());
     }
 }
+

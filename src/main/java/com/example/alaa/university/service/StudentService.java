@@ -70,10 +70,18 @@ public class StudentService implements IStudentService {
                 () -> new ResourceStudentIsNotFoundException("student with id=" +
                         id + " does not found")
         );
-        Long universityId = student.getUniversityId();
-        delete(id);
-        Student newStudent = add(updatedStudent, universityId);
-        return newStudent;
+        Long universityId=student.getUniversityId();
+        student.setName(updatedStudent.getName());
+        student.setGender(updatedStudent.getGender());
+        student.setGraduated(updatedStudent.getGraduated());
+        student.setPaymentFee(updatedStudent.getPaymentFee());
+        student.setEmail(updatedStudent.getEmail());
+        student.setUniversityId(universityId);
+        student.setAddress(updatedStudent.getAddress());
+        student.setBirthDate(updatedStudent.getBirthDate());
+        student.setRegistrationDate(updatedStudent.getRegistrationDate());
+        student.setGraduatedDate(updatedStudent.getGraduatedDate());
+        return studentRepo.saveAndFlush(student);
     }
 
     @Override
@@ -97,3 +105,4 @@ public class StudentService implements IStudentService {
         return students;
     }
 }
+

@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "teachers")
-public class Teacher {
+public class Teacher extends AbstractAuditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -82,6 +82,7 @@ public class Teacher {
             subject.getTeachers().remove(this);
         }
     }
+
 
 
 }

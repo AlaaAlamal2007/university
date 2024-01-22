@@ -1,5 +1,6 @@
 package com.example.alaa.university.config;
 
+import com.example.alaa.university.auditing.ApplicationAuditAware;
 import com.example.alaa.university.domain.Address;
 import com.example.alaa.university.domain.Student;
 import com.example.alaa.university.domain.University;
@@ -7,6 +8,8 @@ import com.example.alaa.university.repository.ApplicationUserRepo;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@EnableJpaAuditing
 public class ApplicationConfig {
     private final ApplicationUserRepo applicationUserRepo;
 
@@ -64,7 +68,12 @@ public class ApplicationConfig {
         return username -> applicationUserRepo.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return new ApplicationAuditAware();
+    }
 }
+
 
 
 

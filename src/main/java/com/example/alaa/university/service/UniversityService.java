@@ -80,9 +80,21 @@ public class UniversityService implements IUniversityService {
             throw new ResourceUniversityIsNotFoundException(
                     "university with id=" + id + " does not exist");
         }
-        delete(id);
-        University universityUpdate = add(updatedUniversity);
-        return universityUpdate;
+        if (university.getStudents() != null && !university.getStudents().isEmpty()) {
+            studentRepo.deleteAllStudentByUniversityId(id);
+        }
+        university.setName(updatedUniversity.getName());
+        university.setAddress(updatedUniversity.getAddress());
+        university.setUniversityType(updatedUniversity.getUniversityType());
+        university.setEmail(updatedUniversity.getEmail());
+        university.setStartOperatingDate(updatedUniversity.getStartOperatingDate());
+        if (updatedUniversity.getStudents() != null && !updatedUniversity.getStudents().isEmpty()) {
+            List<Student> students = new ArrayList<>(updatedUniversity.getStudents());
+            students.forEach(st -> {
+                iStudService.add(st, id);
+            });
+        }
+        return universityRepo.saveAndFlush(university);
     }
 
     @Override
@@ -108,3 +120,4 @@ public class UniversityService implements IUniversityService {
         return universities;
     }
 }
+
