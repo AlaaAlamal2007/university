@@ -4,6 +4,7 @@ import com.example.alaa.university.domain.Subject;
 import com.example.alaa.university.domain.Teacher;
 import com.example.alaa.university.exceptions.ResourceSubjectIsNotFoundException;
 import com.example.alaa.university.exceptions.ResourceTeacherIsNotFoundException;
+import com.example.alaa.university.jms.JmsTeacherSender;
 import com.example.alaa.university.repository.SubjectRepo;
 import com.example.alaa.university.repository.TeacherRepo;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,19 @@ public class TeacherService {
     private final TeacherRepo teacherRepo;
     private final SubjectRepo subjectRepo;
     private final SubjectService subjectService;
+    private final JmsTeacherSender jmsTeacherSender;
 
-    public TeacherService(TeacherRepo teacherRepo, SubjectRepo subjectRepo, SubjectService subjectService) {
+    public TeacherService(TeacherRepo teacherRepo, SubjectRepo subjectRepo, SubjectService subjectService, JmsTeacherSender jmsTeacherSender) {
         this.teacherRepo = teacherRepo;
         this.subjectRepo = subjectRepo;
         this.subjectService = subjectService;
+        this.jmsTeacherSender = jmsTeacherSender;
     }
 
     public Teacher createTeacher(Teacher teacher) {
-        return teacherRepo.save(teacher);
+        Teacher savedTeacher = teacherRepo.save(teacher);
+        jmsTeacherSender.sendTeacherAddedMessage(savedTeacher);
+        return savedTeacher;
     }
 
     public Teacher getTeacher(Long teacherId) {
@@ -65,7 +70,7 @@ public class TeacherService {
         Teacher teacher = teacherRepo.findById(teacherId)
                 .orElseThrow(() -> new ResourceTeacherIsNotFoundException("" +
                         "teacher does not found id=" + teacherId));
-      teacher.setName(updatedTeacher.getName());
+        teacher.setName(updatedTeacher.getName());
         return teacherRepo.saveAndFlush(teacher);
     }
 
@@ -78,14 +83,15 @@ public class TeacherService {
         return teachers;
     }
 
-    public Teacher updateTeacherJustInformation(Long teacherId,String name) {
-        Teacher teacher=teacherRepo.findById(teacherId)
+    public Teacher updateTeacherJustInformation(Long teacherId, String name) {
+        Teacher teacher = teacherRepo.findById(teacherId)
                 .orElseThrow(() -> new ResourceTeacherIsNotFoundException("" +
                         "teacher does not found id=" + teacherId));
         teacher.setName(name);
         return teacherRepo.saveAndFlush(teacher);
     }
 }
+
 
 
 

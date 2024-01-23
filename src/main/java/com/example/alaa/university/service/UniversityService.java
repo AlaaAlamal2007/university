@@ -4,6 +4,7 @@ import com.example.alaa.university.domain.Student;
 import com.example.alaa.university.domain.University;
 import com.example.alaa.university.exceptions.ArgumentUniversityException;
 import com.example.alaa.university.exceptions.ResourceUniversityIsNotFoundException;
+import com.example.alaa.university.jms.JmsUniversitySender;
 import com.example.alaa.university.repository.AddressRepo;
 import com.example.alaa.university.repository.StudentRepo;
 import com.example.alaa.university.repository.UniversityRepo;
@@ -19,14 +20,16 @@ public class UniversityService implements IUniversityService {
     private final StudentRepo studentRepo;
 
     private final IStudentService iStudService;
+    private final JmsUniversitySender jmsUniversitySender;
 
     public UniversityService(UniversityRepo universityRepo,
                              AddressRepo addressRepo, StudentRepo studentRepo,
-                             IStudentService iStudService) {
+                             IStudentService iStudService, JmsUniversitySender jmsUniversitySender) {
         this.universityRepo = universityRepo;
         this.addressRepo = addressRepo;
         this.studentRepo = studentRepo;
         this.iStudService = iStudService;
+        this.jmsUniversitySender = jmsUniversitySender;
     }
 
     @Override
@@ -70,6 +73,7 @@ public class UniversityService implements IUniversityService {
                 iStudService.add(st, uniId);
             });
         }
+        jmsUniversitySender.sendUniversityAddedMessage(savedUniversity);
         return savedUniversity;
     }
 
@@ -120,4 +124,5 @@ public class UniversityService implements IUniversityService {
         return universities;
     }
 }
+
 
